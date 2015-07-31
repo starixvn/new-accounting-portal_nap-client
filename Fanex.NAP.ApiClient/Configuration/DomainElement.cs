@@ -2,40 +2,36 @@
 {
     using System.Configuration;
 
-    /// <summary>
-    /// Domain Element.
-    /// </summary>
     public class DomainElement : ConfigurationElement
     {
-        private const string __NAP_DOMAIN_NAME = "Name";
+        private const string DomainName = "Name";
+        private const string DomainPath = "Path";
 
-        private const string __NAP_DOMAIN_PATH = "Path";
-
-        [ConfigurationProperty(__NAP_DOMAIN_NAME, IsRequired = true)]
+        [ConfigurationProperty(DomainName, IsRequired = true)]
         public string Name
         {
             get
             {
-                return (string)this[__NAP_DOMAIN_NAME];
+                return (string)this[DomainName];
             }
 
             set
             {
-                this[__NAP_DOMAIN_NAME] = value;
+                this[DomainName] = value;
             }
         }
 
-        [ConfigurationProperty(__NAP_DOMAIN_PATH, IsRequired = true)]
+        [ConfigurationProperty(DomainPath, IsRequired = true)]
         public string Path
         {
             get
             {
-                return (string)this[__NAP_DOMAIN_PATH];
+                return (string)this[DomainPath];
             }
 
             set
             {
-                this[__NAP_DOMAIN_PATH] = value;
+                this[DomainPath] = value;
             }
         }
     }

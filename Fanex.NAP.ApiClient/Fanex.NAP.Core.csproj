@@ -75,7 +75,7 @@
     <Compile Include="Extensions\SiteClientExtension.cs" />
     <Compile Include="Extensions\MaintenanceClientExtension.cs" />
     <Compile Include="Extensions\SSOClientExtension.cs" />
-    <Compile Include="Extensions\ReCheckinClientExtension.cs" />
+    <Compile Include="Extensions\CheckinClientExtension.cs" />
     <Compile Include="Extensions\LogoutClientExtension.cs" />
     <Compile Include="Extensions\LoginClientExtension.cs" />
     <Compile Include="Extensions\GroupClientExtension.cs" />

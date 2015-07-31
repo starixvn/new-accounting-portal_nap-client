@@ -1,0 +1,45 @@
+﻿namespace Fanex.NAP.Core.Test.Clients
+{
+    using System;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fanex.NAP.Core.Clients;
+    using Fanex.NAP.Core.Models.ParameterObject;
+    using NSubstitute;
+    using NUnit.Framework;
+
+    [TestFixture]
+    public class SSOClientTest
+    {
+        private const string BaseEndpoint = "http://10.18.200.209:1710/api";
+        private HttpResponseMessage _respone;
+        private SSOClient _client;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _respone = Substitute.For<HttpResponseMessage>();
+            _respone.Content = Substitute.For<HttpContent>();
+            _client = new SSOClient(new Uri(BaseEndpoint), new FakeDelegatingHandler(_respone));
+        }
+
+        [Test]
+        public void GetTime_WhenCalled_RequestUri()
+        {
+            _client.GetTime();
+
+            var expectedRequestUri = "http://10.18.200.209:1710/api/ssologin/";
+            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
+        }
+
+        [Test]
+        public void Login_WhenCalled_RequestUri()
+        {
+            _client.Login(Arg.Any<SSOLoginParameter>());
+
+            var expectedRequestUri = "http://10.18.200.209:1710/api/ssologin/";
+            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
+        }
+    }
+}

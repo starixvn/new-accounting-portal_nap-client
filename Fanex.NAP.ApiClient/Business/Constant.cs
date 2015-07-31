@@ -1,73 +1,31 @@
 ﻿namespace Fanex.NAP.Core.Business
 {
-    using System.Diagnostics.CodeAnalysis;
-
-    /// <summary>
-    /// The constant class.
-    /// </summary>
     public static class Constant
     {
-        public const string Space = " ";
-
-        public const string Ok = "OK";
-
-        public const string Error = "ERROR";
-
         public const string UAT = "UAT";
 
         public const string LIVE = "LIVE";
 
-        public const string SiteId = "SiteId";
-
         public const string Environment = "Environment";
 
-        public const int SearchAllSite = -9999;
-
-        public const string IT = "IT";
-
-        /// <summary>
-        /// The user policy.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = "Reviewed")]
         public enum Policy
         {
             /// <summary>
-            /// The none permission.
+            /// The none policy.
             /// </summary>
             None = 0,
 
             /// <summary>
-            /// The read permission.
+            /// The read policy.
             /// </summary>
             Read = 1,
 
             /// <summary>
-            /// The host permission.
+            /// The host policy.
             /// </summary>
             Host = 2
         }
 
-        /// <summary>
-        /// Crud permission.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = "Reviewed")]
-        public enum Crud
-        {
-            /// <summary>
-            /// The read permission.
-            /// </summary>
-            Read = 0,
-
-            /// <summary>
-            /// The host permission.
-            /// </summary>
-            Host = 1
-        }
-
-        /// <summary>
-        /// User level.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1034:NestedTypesShouldNotBeVisible", Justification = "Reviewed")]
         public enum Level
         {
             /// <summary>
@@ -76,12 +34,12 @@
             User = 0,
 
             /// <summary>
-            /// The site admin.
+            /// The site admin level.
             /// </summary>
             SiteAdmin = 50,
 
             /// <summary>
-            /// The portal admin.
+            /// The portal admin level.
             /// </summary>
             PortalAdmin = 100
         }

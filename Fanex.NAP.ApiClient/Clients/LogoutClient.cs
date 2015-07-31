@@ -7,11 +7,6 @@
 
     internal class LogoutClient : BaseClient
     {
-        public LogoutClient(Uri baseEndpoint, string appId, string secretKey)
-            : base(baseEndpoint, new NAPDelegatingHandler(appId, secretKey))
-        {
-        }
-
         public LogoutClient(Uri baseEndpoint, DelegatingHandler handler)
             : base(baseEndpoint, handler)
         {

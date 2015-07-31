@@ -1,7 +1,9 @@
 ﻿namespace Fanex.NAP.Core.Web.Attribute
 {
     using System;
+    using System.Net;
     using System.Web;
+    using System.Web.Caching;
     using System.Web.Mvc;
     using System.Web.Security;
     using Fanex.NAP.Core.ApiClient.Auth;
@@ -9,25 +11,15 @@
     using Fanex.NAP.Core.Configuration;
     using Fanex.NAP.Core.Services;
 
-    /// <summary>
-    /// <see cref="http://www.hanselman.com/blog/SystemThreadingThreadCurrentPrincipalVsSystemWebHttpContextCurrentUserOrWhyFormsAuthenticationCanBeSubtle.aspx"/>
-    /// </summary>
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public sealed class NapAuthAttribute : AuthorizeAttribute
+    public class NapAuthAttribute : AuthorizeAttribute
     {
-        #region Member
-
-        private static readonly int _SiteId = Configuration.NapSettings.Settings.SiteId;
-
         private static readonly UserService UserService = new UserService();
-
-        #endregion Member
-
-        #region Properties
-
+        private static readonly Cache PermissionCache = HttpRuntime.Cache;
         private string _functionKey;
-
         private Constant.Policy _policy;
+        private bool _outputCache = false;
+        private int _duration = 0;
 
         public string FunctionKey
         {
@@ -55,12 +47,18 @@
             }
         }
 
-        #endregion Properties
+        public bool OutputCache
+        {
+            get { return _outputCache; }
+            set { _outputCache = value; }
+        }
 
-        /// <summary>
-        /// Authorize action handler.
-        /// </summary>
-        /// <param name="filterContext">Filter context.</param>
+        public int Duration
+        {
+            get { return _duration == 0 ? NapSettings.Settings.OutputCacheDuration : _duration; }
+            set { _duration = value; }
+        }
+
         public override void OnAuthorization(AuthorizationContext filterContext)
         {
             base.OnAuthorization(filterContext);
@@ -68,10 +66,10 @@
             if (filterContext.HttpContext == null)
             {
                 this.CloseConnection(filterContext);
+
                 return;
             }
 
-            // why it is null?
             var principal = filterContext.HttpContext.User as NapPrincipal;
 
             if (principal == null)
@@ -82,44 +80,51 @@
             if (object.ReferenceEquals(principal, null) || object.ReferenceEquals(principal.AuthInfo, null))
             {
                 this.CloseConnection(filterContext);
+
                 return;
             }
 
-            if (CheckFunctionAuthorization(principal.AuthInfo.UserId))
-            {
-                // allow access
-                // log access function here
-                // write log function here (pending due to performance)
-            }
-            else
+            if (!IsAuthenticated(principal.AuthInfo.UserId))
             {
                 this.CloseConnection(filterContext);
+
                 return;
             }
         }
 
-        /// <summary>
-        /// Check function authorization.
-        /// </summary>
-        /// <param name="userId">The user ID.</param>
-        /// <returns>True : has permission, false : not.</returns>
-        public bool CheckFunctionAuthorization(int userId)
+        protected bool IsAuthenticated(int userId)
         {
             if (userId <= 0)
             {
                 return false;
             }
 
-            int policy = UserService.GetPermission(userId, _SiteId, this.FunctionKey);
+            int policy = 0;
+
+            if (OutputCache)
+            {
+                var cacheKey = string.Format("{0}_{1}_{2}_{3}", NapSettings.Settings.AccessKey, userId, NapSettings.Settings.SiteId, this.FunctionKey);
+                var cachedPolicy = PermissionCache.Get(cacheKey);
+
+                if (cachedPolicy == null)
+                {
+                    policy = UserService.GetPermission(userId, NapSettings.Settings.SiteId, this.FunctionKey);
+                    PermissionCache.Insert(cacheKey, policy, null, DateTime.Now.AddSeconds(Duration), Cache.NoSlidingExpiration);
+                }
+                else
+                {
+                    policy = (int)cachedPolicy;
+                }
+            }
+            else
+            {
+                policy = UserService.GetPermission(userId, NapSettings.Settings.SiteId, this.FunctionKey);
+            }
 
             return policy >= (int)this.Policy;
         }
 
-        /// <summary>
-        /// Close connection.
-        /// </summary>
-        /// <param name="filterContext">Filter context.</param>
-        private void CloseConnection(AuthorizationContext filterContext)
+        protected void CloseConnection(AuthorizationContext filterContext)
         {
             if (filterContext == null
                 || filterContext.HttpContext == null
@@ -139,14 +144,7 @@
 
             if (filterContext.HttpContext.Request.IsAjaxRequest())
             {
-                filterContext.Result = new HttpStatusCodeResult(403, "<center><b>" + ViewResources.UnauthorizeMsg + "</b></center>");
-
-                response.Buffer = true;
-                response.StatusCode = 403; // Unauthorized status code
-                response.Write("<center><b>" + ViewResources.UnauthorizeMsg + "</b></center>");
-                response.Flush();
-                response.Close();
-                response.End();
+                HandleForbiddenAjaxRequest(filterContext, response);
             }
             else if (!filterContext.HttpContext.Request.IsAuthenticated)
             {
@@ -159,7 +157,20 @@
             }
         }
 
-        private void SignOut()
+        protected void HandleForbiddenAjaxRequest(AuthorizationContext filterContext, HttpResponseBase response)
+        {
+            var messageContent = string.Format("<center><b>{0}</b></center>", ViewResources.UnauthorizeMsg);
+
+            filterContext.Result = new HttpStatusCodeResult((int)HttpStatusCode.Forbidden, messageContent);
+            response.Buffer = true;
+            response.StatusCode = (int)HttpStatusCode.Forbidden;
+            response.Write(messageContent);
+            response.Flush();
+            response.Close();
+            response.End();
+        }
+
+        protected void SignOut()
         {
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();

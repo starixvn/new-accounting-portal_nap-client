@@ -3,52 +3,33 @@
     using System.Configuration;
     using System.Diagnostics.CodeAnalysis;
 
-    /// <summary>
-    /// Custom configuration for NAP.
-    /// </summary>
     public class NapSettings : ConfigurationSection
     {
-        #region consts
+        private const string NAPSettings = "NapSettings";
+        private const string NAPEnvironment = "Environment";
+        private const string NAPEnableDirectLogin = "EnableDirectLogin";
+        private const string NAPHubUrl = "HubUrl";
+        private const string NAPSiteId = "SiteId";
+        private const string NAPUmAddress = "UMAddress";
+        private const string NAPEnableCheckUm = "EnableCheckUM";
+        private const string NAPEnableReCheckin = "EnableReCheckin";
+        private const string NAPUnauthorizeUrl = "UnauthorizeUrl";
+        private const string NAPServiceUrl = "ServiceUrl";
+        private const string NAPAccessKey = "AccessKey";
+        private const string NAPDomain = "Domain";
+        private const string NAPDomainAdd = "add";
+        private const string NAPOutputCacheDuration = "OutputCacheDuration";
 
-        private const string __NAP_SETTINGS = "NapSettings";
-        private const string __ENVIRONMENT = "Environment";
-        private const string __ENABLE_DIRECT_LOGIN = "EnableDirectLogin";
-        private const string __HUB_URL = "HubUrl";
-        private const string __SITE_ID = "SiteId";
-        private const string __UM_ADDRESS = "UMAddress";
-        private const string __ENABLE_CHECK_UM = "EnableCheckUM";
-        private const string __ENABLE_RECHECKIN = "EnableReCheckin";
-        private const string __UNAUTHORIZE_URL = "UnauthorizeUrl";
-        private const string __SERVICE_URL = "ServiceUrl";
-        private const string __ACCESS_KEY = "AccessKey";
-        private const string __NAP_DOMAIN = "Domain";
-        private const string __NAP_DOMAIN__ADD = "add";
-
-        #endregion consts
-
-        private static NapSettings _settings = ConfigurationManager.GetSection(__NAP_SETTINGS) as NapSettings;
+        private static NapSettings _settings = ConfigurationManager.GetSection(NAPSettings) as NapSettings;
 
         public static NapSettings Settings
         {
-            get
-            {
-                return _settings;
-            }
+            get { return _settings; }
         }
 
         public bool IsNapHub
         {
-            get
-            {
-                return SiteId == 0;
-            }
-        }
-
-        [ConfigurationProperty(__SITE_ID, IsRequired = true)]
-        public int SiteId
-        {
-            get { return (int)this[__SITE_ID]; }
-            set { this[__SITE_ID] = value; }
+            get { return SiteId == 0; }
         }
 
         public bool EnableDirectLogin
@@ -69,28 +50,6 @@
             {
                 _EnableDirectLogin = value.ToString();
             }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Reviewed")]
-        [ConfigurationProperty(__HUB_URL, IsRequired = true)]
-        public string HubUrl
-        {
-            get { return (string)this[__HUB_URL]; }
-            set { this[__HUB_URL] = value; }
-        }
-
-        [ConfigurationProperty(__ENVIRONMENT, IsRequired = true)]
-        public string Environment
-        {
-            get { return (string)this[__ENVIRONMENT]; }
-            set { this[__ENVIRONMENT] = value; }
-        }
-
-        [ConfigurationProperty(__UM_ADDRESS, IsRequired = true)]
-        public string UMAddress
-        {
-            get { return (string)this[__UM_ADDRESS]; }
-            set { this[__UM_ADDRESS] = value; }
         }
 
         public bool EnableCheckUM
@@ -133,59 +92,88 @@
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1056:UriPropertiesShouldNotBeStrings", Justification = "Reviewed")]
-        [ConfigurationProperty(__UNAUTHORIZE_URL, IsRequired = false)]
+        [ConfigurationProperty(NAPSiteId, IsRequired = true)]
+        public int SiteId
+        {
+            get { return (int)this[NAPSiteId]; }
+            set { this[NAPSiteId] = value; }
+        }
+
+        [ConfigurationProperty(NAPHubUrl, IsRequired = true)]
+        public string HubUrl
+        {
+            get { return (string)this[NAPHubUrl]; }
+            set { this[NAPHubUrl] = value; }
+        }
+
+        [ConfigurationProperty(NAPEnvironment, IsRequired = true)]
+        public string Environment
+        {
+            get { return (string)this[NAPEnvironment]; }
+            set { this[NAPEnvironment] = value; }
+        }
+
+        [ConfigurationProperty(NAPUmAddress, IsRequired = true)]
+        public string UMAddress
+        {
+            get { return (string)this[NAPUmAddress]; }
+            set { this[NAPUmAddress] = value; }
+        }
+
+        [ConfigurationProperty(NAPUnauthorizeUrl, IsRequired = false)]
         public string UnauthorizeUrl
         {
-            get { return (string)this[__UNAUTHORIZE_URL]; }
-            set { this[__UNAUTHORIZE_URL] = value; }
+            get { return (string)this[NAPUnauthorizeUrl]; }
+            set { this[NAPUnauthorizeUrl] = value; }
         }
 
-        [ConfigurationProperty(__NAP_DOMAIN, IsDefaultCollection = false)]
-        [ConfigurationCollection(typeof(DomainCollection), AddItemName = __NAP_DOMAIN__ADD)]
+        [ConfigurationProperty(NAPDomain, IsDefaultCollection = false)]
+        [ConfigurationCollection(typeof(DomainCollection), AddItemName = NAPDomainAdd)]
         public DomainCollection Domains
         {
-            get
-            {
-                var domainCollection = (DomainCollection)base[__NAP_DOMAIN];
-
-                return domainCollection;
-            }
+            get { return (DomainCollection)base[NAPDomain]; }
         }
 
-        [ConfigurationProperty(__SERVICE_URL, IsRequired = true)]
+        [ConfigurationProperty(NAPServiceUrl, IsRequired = true)]
         public string ServiceUrl
         {
-            get { return (string)this[__SERVICE_URL]; }
-            set { this[__SERVICE_URL] = value; }
+            get { return (string)this[NAPServiceUrl]; }
+            set { this[NAPServiceUrl] = value; }
         }
 
-        [ConfigurationProperty(__ACCESS_KEY, IsRequired = true)]
+        [ConfigurationProperty(NAPAccessKey, IsRequired = true)]
         public string AccessKey
         {
-            get { return (string)this[__ACCESS_KEY]; }
-            set { this[__ACCESS_KEY] = value; }
+            get { return (string)this[NAPAccessKey]; }
+            set { this[NAPAccessKey] = value; }
         }
 
-        [ConfigurationProperty(__ENABLE_DIRECT_LOGIN, IsRequired = true)]
+        [ConfigurationProperty(NAPOutputCacheDuration, IsRequired = false, DefaultValue = 0)]
+        public int OutputCacheDuration
+        {
+            get { return (int)this[NAPOutputCacheDuration]; }
+            set { this[NAPOutputCacheDuration] = value; }
+        }
+
+        [ConfigurationProperty(NAPEnableDirectLogin, IsRequired = true)]
         private string _EnableDirectLogin
         {
-            get { return (string)this[__ENABLE_DIRECT_LOGIN]; }
-            set { this[__ENABLE_DIRECT_LOGIN] = value; }
+            get { return (string)this[NAPEnableDirectLogin]; }
+            set { this[NAPEnableDirectLogin] = value; }
         }
 
-        [ConfigurationProperty(__ENABLE_CHECK_UM, IsRequired = true)]
+        [ConfigurationProperty(NAPEnableCheckUm, IsRequired = true)]
         private string _EnableCheckUM
         {
-            get { return (string)this[__ENABLE_CHECK_UM]; }
-            set { this[__ENABLE_CHECK_UM] = value; }
+            get { return (string)this[NAPEnableCheckUm]; }
+            set { this[NAPEnableCheckUm] = value; }
         }
 
-        [ConfigurationProperty(__ENABLE_RECHECKIN, IsRequired = true)]
+        [ConfigurationProperty(NAPEnableReCheckin, IsRequired = true)]
         private string _EnableReCheckIn
         {
-            get { return (string)this[__ENABLE_RECHECKIN]; }
-            set { this[__ENABLE_RECHECKIN] = value; }
-        }
+            get { return (string)this[NAPEnableReCheckin]; }
+            set { this[NAPEnableReCheckin] = value; }
+        }       
     }
 }

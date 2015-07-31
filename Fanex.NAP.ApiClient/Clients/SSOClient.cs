@@ -7,11 +7,6 @@
 
     internal class SSOClient : BaseClient
     {
-        public SSOClient(Uri baseEndpoint, string appId, string secretKey)
-            : base(baseEndpoint, new NAPDelegatingHandler(appId, secretKey))
-        {
-        }
-
         public SSOClient(Uri baseEndpoint, DelegatingHandler handler)
             : base(baseEndpoint, handler)
         {

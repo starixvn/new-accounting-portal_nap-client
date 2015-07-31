@@ -7,11 +7,6 @@
 
     internal class GroupClient : BaseClient
     {
-        public GroupClient(Uri baseEndpoint, string appId, string secretKey)
-            : base(baseEndpoint, new NAPDelegatingHandler(appId, secretKey))
-        {
-        }
-
         public GroupClient(Uri baseEndpoint, DelegatingHandler handler)
             : base(baseEndpoint, handler)
         {

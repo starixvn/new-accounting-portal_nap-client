@@ -34,18 +34,5 @@
         public string Url { get; set; }
 
         public int Policy { get; set; }
-
-        public string ValidUrl
-        {
-            get
-            {
-                if (!string.IsNullOrEmpty(this.Url))
-                {
-                    return this.Url.StartsWith("/", StringComparison.CurrentCulture) ? "~" + this.Url : this.Url;
-                }
-
-                return "/";
-            }
-        }
     }
 }

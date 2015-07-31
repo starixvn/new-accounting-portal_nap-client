@@ -6,11 +6,6 @@
 
     internal class CheckinClient : BaseClient
     {
-        public CheckinClient(Uri baseEndpoint, string appId, string secretKey)
-            : base(baseEndpoint, new NAPDelegatingHandler(appId, secretKey))
-        {
-        }
-
         public CheckinClient(Uri baseEndpoint, DelegatingHandler handler)
             : base(baseEndpoint, handler)
         {

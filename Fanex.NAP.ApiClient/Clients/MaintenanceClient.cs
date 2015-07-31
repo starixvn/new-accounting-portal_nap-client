@@ -7,11 +7,6 @@
 
     internal class MaintenanceClient : BaseClient
     {
-        public MaintenanceClient(Uri baseEndpoint, string appId, string secretKey)
-            : base(baseEndpoint, new NAPDelegatingHandler(appId, secretKey))
-        {
-        }
-
         public MaintenanceClient(Uri baseEndpoint, DelegatingHandler handler)
             : base(baseEndpoint, handler)
         {

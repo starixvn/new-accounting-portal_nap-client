@@ -10,11 +10,6 @@
 
     internal class UserClient : BaseClient
     {
-        public UserClient(Uri baseEndpoint, string appId, string secretKey)
-            : base(baseEndpoint, new NAPDelegatingHandler(appId, secretKey))
-        {
-        }
-
         public UserClient(Uri baseEndpoint, DelegatingHandler handler)
             : base(baseEndpoint, handler)
         {
@@ -22,7 +17,7 @@
 
         public bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT)
         {
-            return Get<bool>(CreateRequestUri(string.Format(RelativePaths.GetByUserAndSiteIncludeGroup, userId), new { siteId = siteId, environment = environment }));
+            return Get<bool>(CreateRequestUri(string.Format(RelativePaths.HasAnyPermission, userId), new { siteId = siteId, environment = environment }));
         }
 
         public IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string env = Constant.UAT, bool? isActive = null)
@@ -62,7 +57,7 @@
 
         private class RelativePaths
         {
-            public const string GetByUserAndSiteIncludeGroup = "/user/{0}/functionPolicy";
+            public const string HasAnyPermission = "/user/{0}/functionPolicy";
             public const string GetMenuItem = "/user/{0}/menuItem";
             public const string GetSiteLevel = "/user/{0}/sitelevel";
             public const string GetById = "/user/{0}";

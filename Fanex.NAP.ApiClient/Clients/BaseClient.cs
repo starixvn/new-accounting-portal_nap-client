@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Core
+﻿namespace Fanex.NAP.Core.Clients
 {
     using System;
     using System.Collections.Generic;
@@ -38,21 +38,15 @@
 
             using (var respone = _httpClient.SendAsync(message))
             {
-                result = JsonConvert.DeserializeObject<T>(respone.Result.Content.ReadAsStringAsync().Result);
+                var content = respone.Result.Content.ReadAsStringAsync().Result;
+
+                if (!string.IsNullOrWhiteSpace(content))
+                {
+                    result = JsonConvert.DeserializeObject<T>(content);
+                }
             }
 
             return result;
-        }
-
-        protected void Send(Uri requestUri, HttpMethod httpMethod)
-        {
-            Send<object>(requestUri, httpMethod);
-        }
-
-        protected TOutput Send<TOutput>(Uri requestUri, HttpMethod httpMethod)
-        {
-            var message = new HttpRequestMessage(httpMethod, requestUri);
-            return Send<TOutput>(message, true);
         }
 
         protected void Send<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body)
@@ -112,8 +106,8 @@
 
         protected Uri CreateRequestUri(string relativePath, string queryString)
         {
-            var endpoint = new Uri(BaseAddress, "/api" + relativePath);
-            var uriBuilder = new UriBuilder(endpoint) { Query = queryString };
+            var uriBuilder = new UriBuilder(BaseAddress + relativePath) { Query = queryString };
+
             return uriBuilder.Uri;
         }
 

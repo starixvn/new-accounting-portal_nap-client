@@ -33,13 +33,5 @@
         public User Modifier { get; set; }
 
         public DateTime ModifiedDate { get; set; }
-
-        public bool Readonly
-        {
-            get
-            {
-                return Crud == (byte)Constant.Crud.Read;
-            }
-        }
     }
 }

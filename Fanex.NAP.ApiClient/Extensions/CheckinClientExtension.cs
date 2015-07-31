@@ -3,7 +3,7 @@
     using System;
     using Fanex.NAP.Core.Clients;
 
-    internal static class ReCheckinClientExtension
+    internal static class CheckinClientExtension
     {
         public static CheckinClient CreateReCheckinClient(this NAPClients source)
         {

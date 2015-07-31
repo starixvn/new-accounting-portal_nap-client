@@ -10,7 +10,7 @@
     /// Super authorize attribute.
     /// </summary>
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
-    public sealed class NapSuperAuthAttribute : AuthorizeAttribute
+    public class NapSuperAuthAttribute : AuthorizeAttribute
     {
         /// <summary>
         /// Authorize action handler.
@@ -46,7 +46,7 @@
             }
         }
 
-        private bool CheckSessionAuthorization()
+        protected bool CheckSessionAuthorization()
         {
             ICurrentSession session = new CurrentSession();
 

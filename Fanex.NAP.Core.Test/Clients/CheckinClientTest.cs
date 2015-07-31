@@ -1,0 +1,31 @@
+﻿namespace Fanex.NAP.Core.Test.Clients
+{
+    using System;
+    using System.Net.Http;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Fanex.NAP.Core.Clients;
+    using NSubstitute;
+    using NUnit.Framework;
+
+    [TestFixture]
+    public class CheckinClientTest
+    {
+        private const string BaseEndpoint = "http://10.18.200.209:1710/api";
+
+        [Test]
+        public void ReCheckIn_WhenCalled_RequestUri()
+        {
+            var respone = Substitute.For<HttpResponseMessage>();
+            respone.Content = Substitute.For<HttpContent>();
+            var client = new CheckinClient(new Uri(BaseEndpoint), new FakeDelegatingHandler(respone));
+
+            var onlineUserId = 124;
+
+            client.ReCheckIn(onlineUserId);
+
+            var expectedRequestUri = "http://10.18.200.209:1710/api/recheckin/";
+            Assert.AreEqual(expectedRequestUri, respone.RequestMessage.RequestUri.ToString());
+        }
+    }
+}
