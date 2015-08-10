@@ -18,7 +18,7 @@
         private const string NAPAccessKey = "AccessKey";
         private const string NAPDomain = "Domain";
         private const string NAPDomainAdd = "add";
-        private const string NAPOutputCacheDuration = "OutputCacheDuration";
+        private const string NAPCacheDuration = "CacheDuration";
 
         private static NapSettings _settings = ConfigurationManager.GetSection(NAPSettings) as NapSettings;
 
@@ -148,11 +148,11 @@
             set { this[NAPAccessKey] = value; }
         }
 
-        [ConfigurationProperty(NAPOutputCacheDuration, IsRequired = false, DefaultValue = 0)]
-        public int OutputCacheDuration
+        [ConfigurationProperty(NAPCacheDuration, IsRequired = false, DefaultValue = 0)]
+        public int CacheDuration
         {
-            get { return (int)this[NAPOutputCacheDuration]; }
-            set { this[NAPOutputCacheDuration] = value; }
+            get { return (int)this[NAPCacheDuration]; }
+            set { this[NAPCacheDuration] = value; }
         }
 
         [ConfigurationProperty(NAPEnableDirectLogin, IsRequired = true)]

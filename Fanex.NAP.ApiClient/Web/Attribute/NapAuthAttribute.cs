@@ -2,8 +2,8 @@
 {
     using System;
     using System.Net;
+    using System.Runtime.Caching;
     using System.Web;
-    using System.Web.Caching;
     using System.Web.Mvc;
     using System.Web.Security;
     using Fanex.NAP.Core.ApiClient.Auth;
@@ -15,11 +15,11 @@
     public class NapAuthAttribute : AuthorizeAttribute
     {
         private static readonly UserService UserService = new UserService();
-        private static readonly Cache PermissionCache = HttpRuntime.Cache;
+        private static readonly ObjectCache Cache = MemoryCache.Default;
         private string _functionKey;
         private Constant.Policy _policy;
-        private bool _outputCache = false;
-        private int _duration = 0;
+        private bool _permissionCache = false;
+        private int _cacheDuration = 0;
 
         public string FunctionKey
         {
@@ -47,16 +47,16 @@
             }
         }
 
-        public bool OutputCache
+        public bool PermissionCache
         {
-            get { return _outputCache; }
-            set { _outputCache = value; }
+            get { return _permissionCache; }
+            set { _permissionCache = value; }
         }
 
-        public int Duration
+        public int CacheDuration
         {
-            get { return _duration == 0 ? NapSettings.Settings.OutputCacheDuration : _duration; }
-            set { _duration = value; }
+            get { return _cacheDuration == 0 ? NapSettings.Settings.CacheDuration : _cacheDuration; }
+            set { _cacheDuration = value; }
         }
 
         public override void OnAuthorization(AuthorizationContext filterContext)
@@ -101,15 +101,15 @@
 
             int policy = 0;
 
-            if (OutputCache)
+            if (PermissionCache)
             {
                 var cacheKey = string.Format("{0}_{1}_{2}_{3}", NapSettings.Settings.AccessKey, userId, NapSettings.Settings.SiteId, this.FunctionKey);
-                var cachedPolicy = PermissionCache.Get(cacheKey);
+                var cachedPolicy = Cache.Get(cacheKey);
 
                 if (cachedPolicy == null)
                 {
                     policy = UserService.GetPermission(userId, NapSettings.Settings.SiteId, this.FunctionKey);
-                    PermissionCache.Insert(cacheKey, policy, null, DateTime.Now.AddSeconds(Duration), Cache.NoSlidingExpiration);
+                    Cache.Set(cacheKey, policy, DateTime.Now.AddSeconds(CacheDuration));
                 }
                 else
                 {
