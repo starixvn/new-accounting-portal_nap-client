@@ -6,15 +6,16 @@
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
-    using Fanex.NAP.Core.ApiClient.Auth;
+    using Fanex.NAP.Core.Auth;
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Services;
+    using Fanex.NAP.Core.Service.Impl;
+    using Fanex.NAP.Core.Service.Interface;
 
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class NapAuthAttribute : AuthorizeAttribute
     {
-        private static readonly UserService UserService = new UserService();
+        private static readonly IUserService UserService = new UserService();
         private static readonly ObjectCache Cache = MemoryCache.Default;
         private string _functionKey;
         private Constant.Policy _policy;

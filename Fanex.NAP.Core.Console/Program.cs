@@ -2,9 +2,10 @@
 {
     using System;
     using System.Threading.Tasks;
-    using Fanex.NAP.Core.Services;
+    using Fanex.NAP.Core.Service;
     using Fanex.NAP.Core.Web.Attribute;
     using System.Threading;
+    using Fanex.NAP.Core.Service.Impl;
 
     public class Program
     {

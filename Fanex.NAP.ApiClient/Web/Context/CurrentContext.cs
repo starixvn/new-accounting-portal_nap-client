@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Core.ApiClient.Context
+﻿namespace Fanex.NAP.Core.Context
 {
     using System;
     using System.Diagnostics.CodeAnalysis;

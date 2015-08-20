@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Core.ApiClient.Auth
+﻿namespace Fanex.NAP.Core.Auth
 {
     using System;
     using System.Security.Principal;

@@ -1,11 +1,12 @@
-﻿namespace Fanex.NAP.Core.Services
+﻿namespace Fanex.NAP.Core.Service.Impl
 {
     using Fanex.Common.Helper;
     using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Extensions;
     using Fanex.NAP.Core.Models.ParameterObject;
+    using Fanex.NAP.Core.Service.Interface;
 
-    public class SecurityService
+    public class SecurityService : ISecurityService
     {
         private readonly LoginClient _loginClient;
         private readonly LogoutClient _logoutClient;

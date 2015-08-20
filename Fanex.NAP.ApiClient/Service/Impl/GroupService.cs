@@ -1,11 +1,12 @@
-﻿namespace Fanex.NAP.Core.Services
+﻿namespace Fanex.NAP.Core.Service.Impl
 {
     using Fanex.Common.Helper;
     using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Extensions;
     using Fanex.NAP.Core.Models;
+    using Fanex.NAP.Core.Service.Interface;
 
-    public class GroupService
+    public class GroupService : IGroupService
     {
         private readonly GroupClient _groupClient;
 

@@ -68,6 +68,9 @@
     <Compile Include="Clients\MaintenanceClient.cs" />
     <Compile Include="Clients\SSOClient.cs" />
     <Compile Include="Clients\UserClient.cs" />
+    <Compile Include="Command\CommandResult.cs" />
+    <Compile Include="Command\CommandResultBase.cs" />
+    <Compile Include="Command\ICommandResult.cs" />
     <Compile Include="Configuration\DomainCollection.cs" />
     <Compile Include="Configuration\DomainElement.cs" />
     <Compile Include="Configuration\NapSettings.cs" />
@@ -93,11 +96,16 @@
     <Compile Include="Models\ValueObject\SiteLevel.cs" />
     <Compile Include="Models\ValueObject\SiteUrl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\SiteService.cs" />
-    <Compile Include="Services\UserService.cs" />
-    <Compile Include="Services\GroupService.cs" />
-    <Compile Include="Services\MaintenanceService.cs" />
-    <Compile Include="Services\SecurityService.cs" />
+    <Compile Include="Service\Interface\IGroupService.cs" />
+    <Compile Include="Service\Interface\IMaintenanceService.cs" />
+    <Compile Include="Service\Interface\ISecurityService.cs" />
+    <Compile Include="Service\Interface\ISiteService.cs" />
+    <Compile Include="Service\Interface\IUserService.cs" />
+    <Compile Include="Service\Impl\SiteService.cs" />
+    <Compile Include="Service\Impl\UserService.cs" />
+    <Compile Include="Service\Impl\GroupService.cs" />
+    <Compile Include="Service\Impl\MaintenanceService.cs" />
+    <Compile Include="Service\Impl\SecurityService.cs" />
     <Compile Include="Web\Attribute\NapAuthAttribute.cs" />
     <Compile Include="Web\Attribute\NapSuperAuthAttribute.cs" />
     <Compile Include="Web\Auth\AuthInfo.cs" />
@@ -125,6 +133,7 @@
       <LastGenOutput>ViewResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
