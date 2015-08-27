@@ -6,8 +6,8 @@
 
     internal class CheckinClient : BaseClient
     {
-        public CheckinClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public CheckinClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

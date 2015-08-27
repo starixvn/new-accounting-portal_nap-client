@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
     using System;
+    using System.Net.Http;
     using Fanex.NAP.Core.Web.Handler;
 
     internal sealed class NAPClients
@@ -9,6 +10,6 @@
         {
         }
 
-        public Func<NAPDelegatingHandler> CreateDelegatingHandler { get; set; }
+        public Func<HttpClient> CreateHttpClient { get; set; }
     }
 }

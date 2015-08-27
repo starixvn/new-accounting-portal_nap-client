@@ -10,8 +10,8 @@
 
     internal class UserClient : BaseClient
     {
-        public UserClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public UserClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

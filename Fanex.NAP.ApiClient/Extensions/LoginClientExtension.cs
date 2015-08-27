@@ -13,7 +13,7 @@
 
         public static LoginClient CreateLoginClient(this NAPClients source, string serviceUrl)
         {
-            var client = new LoginClient(new Uri(serviceUrl), source.CreateDelegatingHandler());
+            var client = new LoginClient(new Uri(serviceUrl), source.CreateHttpClient());
 
             return client;
         }

@@ -7,8 +7,8 @@
 
     internal class SSOClient : BaseClient
     {
-        public SSOClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public SSOClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

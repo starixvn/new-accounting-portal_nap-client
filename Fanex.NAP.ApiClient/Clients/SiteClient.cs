@@ -8,8 +8,8 @@
 
     internal class SiteClient : BaseClient
     {
-        public SiteClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public SiteClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

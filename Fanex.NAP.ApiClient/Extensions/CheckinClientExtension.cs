@@ -13,7 +13,7 @@
 
         public static CheckinClient CreateReCheckinClient(this NAPClients source, string serviceUrl)
         {
-            var client = new CheckinClient(new Uri(serviceUrl), source.CreateDelegatingHandler());
+            var client = new CheckinClient(new Uri(serviceUrl), source.CreateHttpClient());
 
             return client;
         }

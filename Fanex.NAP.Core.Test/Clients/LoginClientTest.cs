@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Fanex.NAP.Core.Clients;
+    using Fanex.NAP.Core.Configuration;
     using Fanex.NAP.Core.Models.ParameterObject;
     using NSubstitute;
     using NUnit.Framework;
@@ -19,7 +20,8 @@
         {
             var respone = Substitute.For<HttpResponseMessage>();
             respone.Content = Substitute.For<HttpContent>();
-            var client = new LoginClient(new Uri(BaseEndpoint), new FakeDelegatingHandler(respone));
+            var httpClient = HttpClientFactory.Create(new FakeDelegatingHandler(respone));
+            var client = new LoginClient(new Uri(BaseEndpoint), httpClient);
 
             client.Login(Arg.Any<LoginParameter>());
 

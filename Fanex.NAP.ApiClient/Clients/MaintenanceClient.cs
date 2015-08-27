@@ -7,8 +7,8 @@
 
     internal class MaintenanceClient : BaseClient
     {
-        public MaintenanceClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public MaintenanceClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

@@ -7,8 +7,8 @@
 
     internal class LogoutClient : BaseClient
     {
-        public LogoutClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public LogoutClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

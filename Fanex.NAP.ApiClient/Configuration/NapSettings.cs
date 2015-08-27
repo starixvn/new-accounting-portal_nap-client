@@ -19,12 +19,16 @@
         private const string NAPDomain = "Domain";
         private const string NAPDomainAdd = "add";
         private const string NAPCacheDuration = "CacheDuration";
+        private const string NAPUseWindowsAuthentication = "UseWindowsAuthentication";
 
         private static NapSettings _settings = ConfigurationManager.GetSection(NAPSettings) as NapSettings;
 
         public static NapSettings Settings
         {
-            get { return _settings; }
+            get 
+            { 
+                return _settings; 
+            }
         }
 
         public bool IsNapHub
@@ -155,6 +159,13 @@
             set { this[NAPCacheDuration] = value; }
         }
 
+        [ConfigurationProperty(NAPUseWindowsAuthentication, IsRequired = false, DefaultValue = true)]
+        public bool UseWindowsAuthentication
+        {
+            get { return (bool)this[NAPUseWindowsAuthentication]; }
+            set { this[NAPUseWindowsAuthentication] = value; }
+        }
+
         [ConfigurationProperty(NAPEnableDirectLogin, IsRequired = true)]
         private string _EnableDirectLogin
         {
@@ -174,6 +185,6 @@
         {
             get { return (string)this[NAPEnableReCheckin]; }
             set { this[NAPEnableReCheckin] = value; }
-        }       
+        }
     }
 }

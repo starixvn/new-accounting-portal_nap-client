@@ -22,7 +22,6 @@
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            Task<HttpResponseMessage> response = null;
             string requestContentBase64String = string.Empty;
 
             string requestUri = HttpUtility.UrlEncode(request.RequestUri.AbsoluteUri.ToLower());
@@ -64,7 +63,7 @@
                 request.Headers.Authorization = new AuthenticationHeaderValue("amx", string.Format("{0}:{1}:{2}:{3}", _appId, requestSignatureBase64String, nonce, requestTimeStamp));
             }
 
-            response = base.SendAsync(request, cancellationToken);
+            var response = base.SendAsync(request, cancellationToken);
 
             return response;
         }

@@ -13,7 +13,7 @@
 
         public static MaintenanceClient CreateMaintenanceClient(this NAPClients source, string serviceUrl)
         {
-            var client = new MaintenanceClient(new Uri(serviceUrl), source.CreateDelegatingHandler());
+            var client = new MaintenanceClient(new Uri(serviceUrl), source.CreateHttpClient());
 
             return client;
         }

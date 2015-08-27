@@ -7,8 +7,8 @@
 
     internal class GroupClient : BaseClient
     {
-        public GroupClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public GroupClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

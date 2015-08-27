@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Fanex.NAP.Core.Clients;
+    using Fanex.NAP.Core.Configuration;
     using NSubstitute;
     using NUnit.Framework;
 
@@ -18,7 +19,8 @@
         {
             var respone = Substitute.For<HttpResponseMessage>();
             respone.Content = Substitute.For<HttpContent>();
-            var client = new GroupClient(new Uri(BaseEndpoint), new FakeDelegatingHandler(respone));
+            var httpClient = HttpClientFactory.Create(new FakeDelegatingHandler(respone));
+            var client = new GroupClient(new Uri(BaseEndpoint), httpClient);
 
             var groupId = 124;
 

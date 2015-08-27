@@ -13,7 +13,7 @@
 
         public static SSOClient CreateGroupClient(this NAPClients source, string serviceUrl)
         {
-            var client = new SSOClient(new Uri(serviceUrl), source.CreateDelegatingHandler());
+            var client = new SSOClient(new Uri(serviceUrl), source.CreateHttpClient());
 
             return client;
         }

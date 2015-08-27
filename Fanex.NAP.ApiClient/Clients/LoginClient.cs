@@ -7,8 +7,8 @@
 
     internal class LoginClient : BaseClient
     {
-        public LoginClient(Uri baseEndpoint, DelegatingHandler handler)
-            : base(baseEndpoint, handler)
+        public LoginClient(Uri baseEndpoint, HttpClient httpClient)
+            : base(baseEndpoint, httpClient)
         {
         }
 

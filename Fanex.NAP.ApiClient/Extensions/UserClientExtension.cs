@@ -13,7 +13,7 @@
 
         public static UserClient CreateUserClient(this NAPClients source, string serviceUrl)
         {
-            var client = new UserClient(new Uri(serviceUrl), source.CreateDelegatingHandler());
+            var client = new UserClient(new Uri(serviceUrl), source.CreateHttpClient());
 
             return client;
         }

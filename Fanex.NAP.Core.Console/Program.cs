@@ -1,10 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Console
 {
     using System;
-    using System.Threading.Tasks;
-    using Fanex.NAP.Core.Service;
-    using Fanex.NAP.Core.Web.Attribute;
     using System.Threading;
+    using System.Threading.Tasks;
     using Fanex.NAP.Core.Service.Impl;
 
     public class Program
@@ -14,13 +12,14 @@
             var groupService = new GroupService();
 
             var group = groupService.Get(2);
+            ////var returnData = (new UserService()).GetMenuItem(1274, 16) ;
+            ////var returnData = (new SecurityService()).GetTime();
+            ////DoAsync().ContinueWith(task =>
+            ////{
+            ////    Console.WriteLine(task.Result);
+            ////});
 
-            //DoAsync().ContinueWith(task =>
-            //{
-            //    Console.WriteLine(task.Result);
-            //});
-
-            //Console.ReadLine();
+            ////Console.ReadLine();
 
             Console.ReadLine();
         }

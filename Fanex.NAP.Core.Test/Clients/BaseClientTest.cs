@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Net.Http;
     using Fanex.NAP.Core.Clients;
+    using Fanex.NAP.Core.Configuration;
     using NSubstitute;
     using NUnit.Framework;
 
@@ -51,7 +52,7 @@
         private class BaseClientUnderTest : BaseClient
         {
             public BaseClientUnderTest()
-                : base(new Uri("http://10.18.200.209:1710/api"), Substitute.For<DelegatingHandler>())
+                : base(new Uri("http://10.18.200.209:1710/api"), HttpClientFactory.Create(Substitute.For<DelegatingHandler>()))
             {
             }
 

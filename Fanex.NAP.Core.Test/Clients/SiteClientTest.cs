@@ -5,6 +5,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Fanex.NAP.Core.Clients;
+    using Fanex.NAP.Core.Configuration;
     using Fanex.NAP.Core.Models.ParameterObject;
     using NSubstitute;
     using NUnit.Framework;
@@ -15,13 +16,15 @@
         private const string BaseEndpoint = "http://10.18.200.209:1710/api";
         private HttpResponseMessage _respone;
         private SiteClient _client;
+        private HttpClient _httpClient;
 
         [SetUp]
         public void SetUp()
         {
             _respone = Substitute.For<HttpResponseMessage>();
             _respone.Content = Substitute.For<HttpContent>();
-            _client = new SiteClient(new Uri(BaseEndpoint), new FakeDelegatingHandler(_respone));
+            _httpClient = HttpClientFactory.Create(new FakeDelegatingHandler(_respone));
+            _client = new SiteClient(new Uri(BaseEndpoint), _httpClient);
         }
 
         [Test]

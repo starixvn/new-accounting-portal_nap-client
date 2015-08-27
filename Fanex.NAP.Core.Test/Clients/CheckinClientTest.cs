@@ -2,8 +2,6 @@
 {
     using System;
     using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
     using Fanex.NAP.Core.Clients;
     using NSubstitute;
     using NUnit.Framework;
@@ -18,7 +16,8 @@
         {
             var respone = Substitute.For<HttpResponseMessage>();
             respone.Content = Substitute.For<HttpContent>();
-            var client = new CheckinClient(new Uri(BaseEndpoint), new FakeDelegatingHandler(respone));
+            var httpClient = HttpClientFactory.Create(new FakeDelegatingHandler(respone));
+            var client = new CheckinClient(new Uri(BaseEndpoint), httpClient);
 
             var onlineUserId = 124;
 

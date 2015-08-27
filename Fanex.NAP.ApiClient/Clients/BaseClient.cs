@@ -14,11 +14,11 @@
         private readonly HttpClient _httpClient;
         private bool _disposed;
 
-        public BaseClient(Uri baseEndPoint, DelegatingHandler handler = null)
+        public BaseClient(Uri baseEndPoint, HttpClient httpClient)
         {
             BaseAddress = baseEndPoint;
 
-            _httpClient = HttpClientFactory.Create(handler);
+            _httpClient = httpClient;
             _disposed = false;
         }
 
@@ -38,11 +38,18 @@
 
             using (var respone = _httpClient.SendAsync(message))
             {
-                var content = respone.Result.Content.ReadAsStringAsync().Result;
-
-                if (!string.IsNullOrWhiteSpace(content))
+                if (respone.Result.StatusCode != HttpStatusCode.Unauthorized)
                 {
-                    result = JsonConvert.DeserializeObject<T>(content);
+                    var content = respone.Result.Content.ReadAsStringAsync().Result;
+
+                    if (!string.IsNullOrWhiteSpace(content))
+                    {
+                        result = JsonConvert.DeserializeObject<T>(content);
+                    }
+                }
+                else
+                {
+                    throw new UnauthorizedAccessException(string.Format("You do not have permission to access this link: {0}", requestUri));
                 }
             }
 

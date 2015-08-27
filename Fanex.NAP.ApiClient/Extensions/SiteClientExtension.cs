@@ -13,7 +13,7 @@
 
         public static SiteClient CreateSiteClient(this NAPClients source, string serviceUrl)
         {
-            var client = new SiteClient(new Uri(serviceUrl), source.CreateDelegatingHandler());
+            var client = new SiteClient(new Uri(serviceUrl), source.CreateHttpClient());
 
             return client;
         }
