@@ -7,7 +7,7 @@
     {
         public static LoginClient CreateLoginClient(this NAPClients source)
         {
-            var connectionString = ClientContext.Configuration.ServiceUrl;
+            var connectionString = ClientContext.GetServiceUrl();
             return CreateLoginClient(source, connectionString);
         }
 

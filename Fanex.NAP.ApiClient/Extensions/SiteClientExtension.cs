@@ -7,7 +7,7 @@
     {
         public static SiteClient CreateSiteClient(this NAPClients source)
         {
-            var connectionString = ClientContext.Configuration.ServiceUrl;
+            var connectionString = ClientContext.GetServiceUrl();
             return CreateSiteClient(source, connectionString);
         }
 

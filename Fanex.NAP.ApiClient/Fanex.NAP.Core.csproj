@@ -74,6 +74,7 @@
     <Compile Include="Configuration\DomainCollection.cs" />
     <Compile Include="Configuration\DomainElement.cs" />
     <Compile Include="Configuration\NapSettings.cs" />
+    <Compile Include="Exceptions\NAPApiException.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\UserClientExtension.cs" />
     <Compile Include="Extensions\SiteClientExtension.cs" />

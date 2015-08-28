@@ -7,7 +7,7 @@
     {
         public static LogoutClient CreateLogoutClient(this NAPClients source)
         {
-            var connectionString = ClientContext.Configuration.ServiceUrl;
+            var connectionString = ClientContext.GetServiceUrl();
             return CreateLogoutClient(source, connectionString);
         }
 

@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Clients\BaseClientTest.cs" />
+    <Compile Include="Clients\ClientContextTests.cs" />
     <Compile Include="Clients\UserClientTest.cs" />
     <Compile Include="Clients\SSOClientTest.cs" />
     <Compile Include="Clients\SiteClientTest.cs" />

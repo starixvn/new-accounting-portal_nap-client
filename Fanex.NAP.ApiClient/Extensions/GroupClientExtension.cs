@@ -7,7 +7,7 @@
     {
         public static GroupClient CreateGroupClient(this NAPClients source)
         {
-            var connectionString = ClientContext.Configuration.ServiceUrl;
+            var connectionString = ClientContext.GetServiceUrl();
             return CreateGroupClient(source, connectionString);
         }
 

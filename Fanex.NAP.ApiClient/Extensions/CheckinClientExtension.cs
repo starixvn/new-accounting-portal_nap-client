@@ -7,7 +7,7 @@
     {
         public static CheckinClient CreateReCheckinClient(this NAPClients source)
         {
-            var connectionString = ClientContext.Configuration.ServiceUrl;
+            var connectionString = ClientContext.GetServiceUrl();
             return CreateReCheckinClient(source, connectionString);
         }
 

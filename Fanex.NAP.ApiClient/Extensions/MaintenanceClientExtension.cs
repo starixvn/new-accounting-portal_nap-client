@@ -7,7 +7,7 @@
     {
         public static MaintenanceClient CreateMaintenanceClient(this NAPClients source)
         {
-            var connectionString = ClientContext.Configuration.ServiceUrl;
+            var connectionString = ClientContext.GetServiceUrl();
             return CreateMaintenanceClient(source, connectionString);
         }
 
