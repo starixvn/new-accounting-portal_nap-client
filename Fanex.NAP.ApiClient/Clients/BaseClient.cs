@@ -6,7 +6,9 @@
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
+    using Fanex.NAP.Core.Exceptions;
     using Fanex.NAP.Core.Extensions;
+    using Fanex.NAP.Core.Web;
     using Newtonsoft.Json;
 
     internal class BaseClient
@@ -38,7 +40,15 @@
 
             using (var respone = _httpClient.SendAsync(message))
             {
-                if (respone.Result.StatusCode != HttpStatusCode.Unauthorized)
+                if (respone.Result.StatusCode == HttpStatusCode.Unauthorized)
+                {
+                    throw new NAPApiException(string.Format(ViewResources.Dont_Have_Permission, requestUri));
+                }
+                else if (respone.Result.StatusCode == HttpStatusCode.InternalServerError)
+                {
+                    throw new NAPApiException(ViewResources.System_Error);
+                }
+                else
                 {
                     var content = respone.Result.Content.ReadAsStringAsync().Result;
 
@@ -46,10 +56,6 @@
                     {
                         result = JsonConvert.DeserializeObject<T>(content);
                     }
-                }
-                else
-                {
-                    throw new UnauthorizedAccessException(string.Format("You do not have permission to access this link: {0}", requestUri));
                 }
             }
 

@@ -11,8 +11,8 @@
         {
             var groupService = new GroupService();
 
-            var group = groupService.Get(2);
-            ////var returnData = (new UserService()).GetMenuItem(1274, 16) ;
+            var group = (new UserService()).GetPermission(1274, 16, "Administrator");
+            var returnData = (new UserService()).GetMenuItem(1274, 16);
             ////var returnData = (new SecurityService()).GetTime();
             ////DoAsync().ContinueWith(task =>
             ////{
