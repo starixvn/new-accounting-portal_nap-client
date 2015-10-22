@@ -2,7 +2,7 @@
 {
     using System;
     using System.Net.Http;
-    using Fanex.NAP.Core.Web.Handler;
+    using Fanex.NAP.Core.Models.ParameterObject;
 
     internal class CheckinClient : BaseClient
     {
@@ -11,9 +11,9 @@
         {
         }
 
-        public bool ReCheckIn(int onlineUserId)
+        public int ReCheckIn(int onlineUserId, int siteId)
         {
-            return Send<int, bool>(CreateRequestUri(RelativePaths.ReCheckIn), HttpMethod.Post, onlineUserId);
+            return Get<int>(CreateRequestUri(RelativePaths.ReCheckIn, new { onUserId = onlineUserId, siteId = siteId }));
         }
 
         private class RelativePaths

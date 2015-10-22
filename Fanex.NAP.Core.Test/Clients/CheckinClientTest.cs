@@ -3,6 +3,7 @@
     using System;
     using System.Net.Http;
     using Fanex.NAP.Core.Clients;
+    using Fanex.NAP.Core.Models.ParameterObject;
     using NSubstitute;
     using NUnit.Framework;
 
@@ -20,8 +21,9 @@
             var client = new CheckinClient(new Uri(BaseEndpoint), httpClient);
 
             var onlineUserId = 124;
+            var siteId = 8;
 
-            client.ReCheckIn(onlineUserId);
+            client.ReCheckIn(onlineUserId, siteId);
 
             var expectedRequestUri = "http://10.18.200.209:1710/api/recheckin/";
             Assert.AreEqual(expectedRequestUri, respone.RequestMessage.RequestUri.ToString());

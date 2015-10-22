@@ -4,6 +4,7 @@
     using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Extensions;
     using Fanex.NAP.Core.Models.ParameterObject;
+    using Fanex.NAP.Core.Models.ValueObject;
     using Fanex.NAP.Core.Service.Interface;
 
     public class SecurityService : ISecurityService
@@ -35,11 +36,12 @@
             _logoutClient.Logout(onlineUserId);
         }
 
-        public bool ReCheckIn(int onlineUserId)
+        public int ReCheckIn(int onlineUserId, int siteId)
         {
             Check.Argument.IsNotNegativeOrZero(onlineUserId, "onlineUserId");
+            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
 
-            return _checkinClient.ReCheckIn(onlineUserId);
+            return _checkinClient.ReCheckIn(onlineUserId, siteId);
         }
 
         public string GetTime()

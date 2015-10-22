@@ -11,7 +11,7 @@
 
         void Logout(int onlineUserId);
 
-        bool ReCheckIn(int onlineUserId);
+        int ReCheckIn(int onlineUserId, int siteId);
 
         int SSOLogin(SSOLoginParameter parameter);
     }
