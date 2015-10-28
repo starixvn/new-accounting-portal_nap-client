@@ -41,7 +41,7 @@
                 else
                 {
                     var loginUrl = !string.IsNullOrWhiteSpace(FormsAuthentication.LoginUrl) ? FormsAuthentication.LoginUrl : "~/userlogin/login";
-                    response.Redirect(loginUrl, false);
+                    filterContext.Result = new RedirectResult(loginUrl);
                 }
             }
         }
