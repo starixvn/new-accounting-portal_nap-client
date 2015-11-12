@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Web.Auth
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Xml.Serialization;
 
@@ -15,9 +16,9 @@
 
         public int UserId
         {
-            get 
-            { 
-                return this._userId; 
+            get
+            {
+                return this._userId;
             }
 
             set
@@ -33,9 +34,9 @@
 
         public int OnUserId
         {
-            get 
+            get
             {
-                return this._onuserId; 
+                return this._onuserId;
             }
 
             set
@@ -60,6 +61,7 @@
         /// Authorize action handler.
         /// </summary>
         /// <returns>XML string.</returns>
+        [SuppressMessage("Microsoft.Usage", "CA2202:Do not dispose objects multiple times", Justification = "Reviewed")]
         public string ToXml()
         {
             string xml = string.Empty;

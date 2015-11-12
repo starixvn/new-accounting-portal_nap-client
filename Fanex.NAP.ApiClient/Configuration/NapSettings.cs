@@ -159,7 +159,7 @@
             set { this[NAPCacheDuration] = value; }
         }
 
-        [ConfigurationProperty(NAPUseWindowsAuthentication, IsRequired = false, DefaultValue = true)]
+        [ConfigurationProperty(NAPUseWindowsAuthentication, IsRequired = false, DefaultValue = false)]
         public bool UseWindowsAuthentication
         {
             get { return (bool)this[NAPUseWindowsAuthentication]; }

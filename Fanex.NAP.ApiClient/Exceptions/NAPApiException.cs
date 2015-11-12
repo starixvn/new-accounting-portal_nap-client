@@ -3,6 +3,7 @@
     using System;
     using System.Runtime.Serialization;
 
+    [Serializable]
     public class NAPApiException : Exception, ISerializable
     {
         public NAPApiException()

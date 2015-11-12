@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
     using System.Net.Http;
     using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Configuration;
@@ -61,6 +62,7 @@
                 return base.CreateRequestUri(relativePath, queryString);
             }
 
+            [SuppressMessage("Microsoft.Design", "CA1061:DoNotHideBaseClassMethods", Justification = "Reviewed!")]
             public new Uri CreateRequestUri(string relativePath, object queryStringParameters)
             {
                 return base.CreateRequestUri(relativePath, queryStringParameters);
