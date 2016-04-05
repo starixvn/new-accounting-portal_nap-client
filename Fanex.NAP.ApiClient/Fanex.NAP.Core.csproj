@@ -65,7 +65,6 @@
     <Compile Include="Clients\LoginClient.cs" />
     <Compile Include="Clients\SiteClient.cs" />
     <Compile Include="Clients\GroupClient.cs" />
-    <Compile Include="Clients\MaintenanceClient.cs" />
     <Compile Include="Clients\SSOClient.cs" />
     <Compile Include="Clients\UserClient.cs" />
     <Compile Include="Command\CommandResult.cs" />
@@ -78,7 +77,6 @@
     <Compile Include="Extensions\EnumerableExtension.cs" />
     <Compile Include="Extensions\UserClientExtension.cs" />
     <Compile Include="Extensions\SiteClientExtension.cs" />
-    <Compile Include="Extensions\MaintenanceClientExtension.cs" />
     <Compile Include="Extensions\SSOClientExtension.cs" />
     <Compile Include="Extensions\CheckinClientExtension.cs" />
     <Compile Include="Extensions\LogoutClientExtension.cs" />
@@ -92,20 +90,17 @@
     <Compile Include="Models\ParameterObject\SSOLoginParameter.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\User.cs" />
-    <Compile Include="Models\ValueObject\Downtime.cs" />
     <Compile Include="Models\ValueObject\FunctionPolicy.cs" />
     <Compile Include="Models\ValueObject\SiteLevel.cs" />
     <Compile Include="Models\ValueObject\SiteUrl.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Interface\IGroupService.cs" />
-    <Compile Include="Service\Interface\IMaintenanceService.cs" />
     <Compile Include="Service\Interface\ISecurityService.cs" />
     <Compile Include="Service\Interface\ISiteService.cs" />
     <Compile Include="Service\Interface\IUserService.cs" />
     <Compile Include="Service\Impl\SiteService.cs" />
     <Compile Include="Service\Impl\UserService.cs" />
     <Compile Include="Service\Impl\GroupService.cs" />
-    <Compile Include="Service\Impl\MaintenanceService.cs" />
     <Compile Include="Service\Impl\SecurityService.cs" />
     <Compile Include="Web\Attribute\NapAuthAttribute.cs" />
     <Compile Include="Web\Attribute\NapSuperAuthAttribute.cs" />
