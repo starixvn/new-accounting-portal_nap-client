@@ -6,7 +6,7 @@
     using Fanex.NAP.Core.Extensions;
     using Fanex.NAP.Core.Models.ValueObject;
     using Fanex.NAP.Core.Service.Interface;
-
+    using Models;
     public class SiteService : ISiteService
     {
         private readonly SiteClient _siteClient;
@@ -29,6 +29,14 @@
             Check.Argument.IsNotEmpty(environment, "environment");
 
             return _siteClient.GetUrlById(siteId, environment);
+        }
+
+        public IEnumerable<MenuItem> GetMenuItemBySiteId(int siteId, string enviroment, bool? isActive = null)
+        {
+            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
+            Check.Argument.IsNotEmpty(enviroment, "enviroment");
+
+            return _siteClient.GetMenuItemBySiteId(siteId, enviroment, isActive);
         }
     }
 }
