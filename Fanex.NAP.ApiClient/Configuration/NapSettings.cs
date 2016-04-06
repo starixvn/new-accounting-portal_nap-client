@@ -10,8 +10,6 @@
         private const string NAPEnableDirectLogin = "EnableDirectLogin";
         private const string NAPHubUrl = "HubUrl";
         private const string NAPSiteId = "SiteId";
-        private const string NAPUmAddress = "UMAddress";
-        private const string NAPEnableCheckUm = "EnableCheckUM";
         private const string NAPEnableReCheckin = "EnableReCheckin";
         private const string NAPUnauthorizeUrl = "UnauthorizeUrl";
         private const string NAPServiceUrls = "ServiceUrls";
@@ -56,25 +54,6 @@
             }
         }
 
-        public bool EnableCheckUM
-        {
-            get
-            {
-                var result = false;
-
-                if (!bool.TryParse(this._EnableCheckUM, out result))
-                {
-                    result = Equals(this._EnableCheckUM, "1");
-                }
-
-                return result;
-            }
-
-            set
-            {
-                this._EnableCheckUM = value.ToString();
-            }
-        }
 
         public bool EnableReCheckIn
         {
@@ -117,12 +96,6 @@
             set { this[NAPEnvironment] = value; }
         }
 
-        [ConfigurationProperty(NAPUmAddress, IsRequired = true)]
-        public string UMAddress
-        {
-            get { return (string)this[NAPUmAddress]; }
-            set { this[NAPUmAddress] = value; }
-        }
 
         [ConfigurationProperty(NAPUnauthorizeUrl, IsRequired = false)]
         public string UnauthorizeUrl
@@ -171,13 +144,6 @@
         {
             get { return (string)this[NAPEnableDirectLogin]; }
             set { this[NAPEnableDirectLogin] = value; }
-        }
-
-        [ConfigurationProperty(NAPEnableCheckUm, IsRequired = true)]
-        private string _EnableCheckUM
-        {
-            get { return (string)this[NAPEnableCheckUm]; }
-            set { this[NAPEnableCheckUm] = value; }
         }
 
         [ConfigurationProperty(NAPEnableReCheckin, IsRequired = true)]
