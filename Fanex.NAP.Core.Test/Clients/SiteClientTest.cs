@@ -50,6 +50,19 @@
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
 
+        [Test]
+        public void GetMenuItemBySiteId_WhenCalled_RequestUri()
+        {
+            var siteId = 1456;
+            var environment = "UAT";
+            var isActive = true;
+
+            _client.GetMenuItemBySiteId(siteId, environment, isActive);
+
+            var expectedRequestUri = "http://10.18.200.209:1710/api/site/1456/menuItem?environment=UAT&isActive=True";
+            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
+        }
+
         private Task<string> GetIsActivatedResult()
         {
             return Task.Factory.StartNew<string>(() => { return "A"; });
