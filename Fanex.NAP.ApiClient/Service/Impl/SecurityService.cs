@@ -4,7 +4,6 @@
     using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Extensions;
     using Fanex.NAP.Core.Models.ParameterObject;
-    using Fanex.NAP.Core.Models.ValueObject;
     using Fanex.NAP.Core.Service.Interface;
 
     public class SecurityService : ISecurityService
@@ -13,6 +12,7 @@
         private readonly LogoutClient _logoutClient;
         private readonly CheckinClient _checkinClient;
         private readonly SSOClient _ssoClient;
+        private readonly UserInfoClient _userInfoClient;
 
         public SecurityService()
         {
@@ -20,6 +20,7 @@
             _logoutClient = ClientContext.Clients.CreateLogoutClient();
             _checkinClient = ClientContext.Clients.CreateReCheckinClient();
             _ssoClient = ClientContext.Clients.CreateSSOClient();
+            _userInfoClient = ClientContext.Clients.CreateUserInfoClient();
         }
 
         public int Login(LoginParameter parameter)
@@ -54,6 +55,13 @@
             Check.Argument.IsNotNull(parameter, "parameter");
 
             return _ssoClient.Login(parameter);
+        }
+
+        public bool UpdatePassword(UpdatePasswordParameter parameter)
+        {
+            Check.Argument.IsNotNull(parameter, "parameter");
+
+            return _userInfoClient.UpdatePassword(parameter);
         }
     }
 }

@@ -14,5 +14,7 @@
         int ReCheckIn(int onlineUserId, int siteId);
 
         int SSOLogin(SSOLoginParameter parameter);
+
+        bool UpdatePassword(UpdatePasswordParameter parameter);
     }
 }
