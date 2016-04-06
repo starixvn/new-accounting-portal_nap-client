@@ -6,7 +6,6 @@
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Models;
     using Fanex.NAP.Core.Models.ValueObject;
-    using Fanex.NAP.Core.Web.Handler;
 
     internal class UserClient : BaseClient
     {
