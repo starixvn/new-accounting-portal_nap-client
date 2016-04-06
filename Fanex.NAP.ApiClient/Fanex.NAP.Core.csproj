@@ -66,6 +66,7 @@
     <Compile Include="Clients\SiteClient.cs" />
     <Compile Include="Clients\GroupClient.cs" />
     <Compile Include="Clients\SSOClient.cs" />
+    <Compile Include="Clients\UserInfoClient.cs" />
     <Compile Include="Clients\UserClient.cs" />
     <Compile Include="Command\CommandResult.cs" />
     <Compile Include="Command\CommandResultBase.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="Configuration\NapSettings.cs" />
     <Compile Include="Exceptions\NAPApiException.cs" />
     <Compile Include="Extensions\EnumerableExtension.cs" />
+    <Compile Include="Extensions\UserInfoClientExtension.cs" />
     <Compile Include="Extensions\UserClientExtension.cs" />
     <Compile Include="Extensions\SiteClientExtension.cs" />
     <Compile Include="Extensions\SSOClientExtension.cs" />
@@ -88,6 +90,7 @@
     <Compile Include="Models\MenuItem.cs" />
     <Compile Include="Models\ParameterObject\LoginParameter.cs" />
     <Compile Include="Models\ParameterObject\SSOLoginParameter.cs" />
+    <Compile Include="Models\ParameterObject\UpdatePasswordParameter.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ValueObject\FunctionPolicy.cs" />
