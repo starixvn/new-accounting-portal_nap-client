@@ -25,7 +25,7 @@
 
             client.ReCheckIn(onlineUserId, siteId);
 
-            var expectedRequestUri = "http://10.18.200.209:1710/api/recheckin/";
+            var expectedRequestUri = "http://10.18.200.209:1710/api/recheckin/?onUserId=124&siteId=8";
             Assert.AreEqual(expectedRequestUri, respone.RequestMessage.RequestUri.ToString());
         }
     }
