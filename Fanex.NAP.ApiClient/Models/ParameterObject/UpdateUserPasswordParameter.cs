@@ -1,11 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Models.ParameterObject
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-
-    public class UpdatePasswordParameter
+    public class UpdateUserPasswordParameter
     {
         public int CustId { get; set; }
 

@@ -15,6 +15,6 @@
 
         int SSOLogin(SSOLoginParameter parameter);
 
-        bool UpdatePassword(UpdatePasswordParameter parameter);
+        bool UpdatePassword(UpdateUserPasswordParameter parameter);
     }
 }

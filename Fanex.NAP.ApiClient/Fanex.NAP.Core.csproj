@@ -90,7 +90,8 @@
     <Compile Include="Models\MenuItem.cs" />
     <Compile Include="Models\ParameterObject\LoginParameter.cs" />
     <Compile Include="Models\ParameterObject\SSOLoginParameter.cs" />
-    <Compile Include="Models\ParameterObject\UpdatePasswordParameter.cs" />
+    <Compile Include="Models\ParameterObject\UpdateUserPasswordParameter.cs" />
+    <Compile Include="Models\ParameterObject\UpdateUserInfoParameter.cs" />
     <Compile Include="Models\Site.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\ValueObject\FunctionPolicy.cs" />

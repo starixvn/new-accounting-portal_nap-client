@@ -57,7 +57,7 @@
             return _ssoClient.Login(parameter);
         }
 
-        public bool UpdatePassword(UpdatePasswordParameter parameter)
+        public bool UpdatePassword(UpdateUserPasswordParameter parameter)
         {
             Check.Argument.IsNotNull(parameter, "parameter");
 
