@@ -8,14 +8,16 @@
     using Fanex.NAP.Core.Models;
     using Fanex.NAP.Core.Models.ValueObject;
     using Fanex.NAP.Core.Service.Interface;
-
+    using Models.ParameterObject;
     public class UserService : IUserService
     {
         private readonly UserClient _userClient;
+        private readonly UserInfoClient _userInfoClient;
 
         public UserService()
         {
             _userClient = ClientContext.Clients.CreateUserClient();
+            _userInfoClient = ClientContext.Clients.CreateUserInfoClient();
         }
 
         public bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT)
@@ -89,6 +91,13 @@
             int currentPolicy = GetPermission(userId, siteId, functionKey);
 
             return currentPolicy >= (int)policy;
+        }
+
+        public bool UpdateProfile(UpdateUserInfoParameter parameter)
+        {
+            Check.Argument.IsNotNull(parameter, "parameter");
+
+            return _userInfoClient.UpdateProfile(parameter);
         }
     }
 }
