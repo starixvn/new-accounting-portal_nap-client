@@ -4,24 +4,46 @@
     using System.Threading;
     using System.Threading.Tasks;
     using Fanex.NAP.Core.Service.Impl;
-
+    using Models.ParameterObject;
+    using Web.Session;
+    using Models;
     public class Program
     {
         public static void Main(string[] args)
         {
             var groupService = new GroupService();
 
-            var group = (new UserService()).GetPermission(1274, 16, "Administrator");
-            var returnData = (new UserService()).GetMenuItem(1274, 16);
-            ////var returnData = (new SecurityService()).GetTime();
-            ////DoAsync().ContinueWith(task =>
-            ////{
-            ////    Console.WriteLine(task.Result);
-            ////});
-
-            ////Console.ReadLine();
+            var menuItem = (new SiteService()).GetMenuItemBySiteId(12, "UAT");
+            var result = UpdatePassword();
+            result = UpdateProfile();
 
             Console.ReadLine();
+        }
+
+        private static bool UpdateProfile()
+        {
+            var parameter = new UpdateUserInfoParameter
+            {
+                CustId = 1081978,
+                FirstName = "Test",
+                LastName = "Test"
+            };
+
+            var result = (new UserService()).UpdateProfile(parameter);
+
+            return result;
+        }
+
+        private static bool UpdatePassword()
+        {
+            UpdateUserPasswordParameter parameter = new UpdateUserPasswordParameter
+            {
+                CustId = 1081978,
+                UserPwd = "1234aa",
+            };
+
+            var result = (new SecurityService()).UpdatePassword(parameter);
+            return result;
         }
 
         public static Task<string> DoAsync()
