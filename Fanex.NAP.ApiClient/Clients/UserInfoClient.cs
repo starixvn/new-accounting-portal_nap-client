@@ -1,8 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
+    using Models.ParameterObject;
     using System;
     using System.Net.Http;
-    using Models.ParameterObject;
 
     internal class UserInfoClient : BaseClient
     {

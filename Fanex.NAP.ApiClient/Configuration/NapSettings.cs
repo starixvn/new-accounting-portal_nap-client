@@ -1,7 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Configuration
 {
     using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
 
     public class NapSettings : ConfigurationSection
     {
@@ -23,9 +22,9 @@
 
         public static NapSettings Settings
         {
-            get 
-            { 
-                return _settings; 
+            get
+            {
+                return _settings;
             }
         }
 
@@ -53,7 +52,6 @@
                 _EnableDirectLogin = value.ToString();
             }
         }
-
 
         public bool EnableReCheckIn
         {
@@ -95,7 +93,6 @@
             get { return (string)this[NAPEnvironment]; }
             set { this[NAPEnvironment] = value; }
         }
-
 
         [ConfigurationProperty(NAPUnauthorizeUrl, IsRequired = false)]
         public string UnauthorizeUrl

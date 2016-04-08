@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Models.ValueObject
 {
     using System;
-   
+
     public class SiteLevel
     {
         public Site Site { get; set; }
@@ -9,7 +9,7 @@
         public int Level { get; set; }
 
         public bool IsActive { get; set; }
-        
+
         public DateTime LastLoginDate { get; set; }
 
         public User Creator { get; set; }

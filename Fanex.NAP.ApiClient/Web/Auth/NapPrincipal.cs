@@ -1,10 +1,10 @@
 ﻿namespace Fanex.NAP.Core.Auth
 {
+    using Fanex.NAP.Core.Web.Auth;
     using System;
     using System.Security.Principal;
     using System.Web;
     using System.Web.Security;
-    using Fanex.NAP.Core.Web.Auth;    
 
     /// <summary>
     /// <see cref="http://stackoverflow.com/questions/1064271/asp-net-mvc-set-custom-iidentity-or-iprincipal"/>

@@ -1,11 +1,11 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
+    using Fanex.NAP.Core.Models.ValueObject;
+    using Models;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
-    using Fanex.NAP.Core.Models.ValueObject;
-    using Fanex.NAP.Core.Web.Handler;
-    using Models;
+
     internal class SiteClient : BaseClient
     {
         public SiteClient(Uri baseEndpoint, HttpClient httpClient)
@@ -25,7 +25,7 @@
 
         public IEnumerable<MenuItem> GetMenuItemBySiteId(int siteId, string env, bool? isActive = null)
         {
-            return Get<IEnumerable<MenuItem>>(CreateRequestUri(string.Format(RelativePaths.GetMenuItemBySiteId, siteId), new { environment = env, isActive = isActive}));
+            return Get<IEnumerable<MenuItem>>(CreateRequestUri(string.Format(RelativePaths.GetMenuItemBySiteId, siteId), new { environment = env, isActive = isActive }));
         }
 
         private class RelativePaths

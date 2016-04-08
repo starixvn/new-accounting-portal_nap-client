@@ -2,8 +2,6 @@
 {
     using System;
     using System.Net.Http;
-    using Fanex.NAP.Core.Models.ParameterObject;
-    using Fanex.NAP.Core.Web.Handler;
 
     internal class LogoutClient : BaseClient
     {

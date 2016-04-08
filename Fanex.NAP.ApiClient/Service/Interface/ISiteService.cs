@@ -1,9 +1,9 @@
 ﻿namespace Fanex.NAP.Core.Service.Interface
 {
-    using System;
-    using System.Collections.Generic;
     using Fanex.NAP.Core.Models.ValueObject;
     using Models;
+    using System.Collections.Generic;
+
     public interface ISiteService
     {
         IEnumerable<SiteUrl> GetUrlById(int siteId, string environment);

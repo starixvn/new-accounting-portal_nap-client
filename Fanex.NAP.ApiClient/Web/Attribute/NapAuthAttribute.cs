@@ -1,16 +1,16 @@
 ﻿namespace Fanex.NAP.Core.Web.Attribute
 {
+    using Fanex.NAP.Core.Auth;
+    using Fanex.NAP.Core.Business;
+    using Fanex.NAP.Core.Configuration;
+    using Fanex.NAP.Core.Service.Impl;
+    using Fanex.NAP.Core.Service.Interface;
     using System;
     using System.Net;
     using System.Runtime.Caching;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
-    using Fanex.NAP.Core.Auth;
-    using Fanex.NAP.Core.Business;
-    using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Service.Impl;
-    using Fanex.NAP.Core.Service.Interface;
 
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class NapAuthAttribute : AuthorizeAttribute

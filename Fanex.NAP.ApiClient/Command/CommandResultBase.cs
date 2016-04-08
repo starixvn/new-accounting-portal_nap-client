@@ -9,8 +9,6 @@
 
 namespace Fanex.NAP.Core.Command
 {
-    using System;
-
     /// <summary>
     /// Command result base.
     /// </summary>
@@ -21,7 +19,7 @@ namespace Fanex.NAP.Core.Command
 
         public CommandResultBase()
             : this(string.Empty, string.Empty)
-        { 
+        {
         }
 
         public CommandResultBase(dynamic code, dynamic message)

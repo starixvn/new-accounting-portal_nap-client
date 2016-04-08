@@ -1,11 +1,10 @@
 ﻿namespace Fanex.NAP.Core.Service.Interface
 {
-    using System;
-    using System.Collections.Generic;
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Models;
     using Fanex.NAP.Core.Models.ValueObject;
     using Models.ParameterObject;
+    using System.Collections.Generic;
 
     public interface IUserService
     {

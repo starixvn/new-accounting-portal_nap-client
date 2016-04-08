@@ -1,9 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
+    using Fanex.NAP.Core.Models;
     using System;
     using System.Net.Http;
-    using Fanex.NAP.Core.Models;
-    using Fanex.NAP.Core.Web.Handler;
 
     internal class GroupClient : BaseClient
     {

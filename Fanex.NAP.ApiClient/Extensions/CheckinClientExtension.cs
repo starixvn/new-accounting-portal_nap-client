@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Extensions
 {
-    using System;
     using Fanex.NAP.Core.Clients;
+    using System;
 
     internal static class CheckinClientExtension
     {

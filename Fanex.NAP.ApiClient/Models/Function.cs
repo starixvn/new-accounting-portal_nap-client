@@ -1,7 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Models
 {
     using System;
-    using Fanex.NAP.Core.Business;
 
     [Serializable]
     public class Function

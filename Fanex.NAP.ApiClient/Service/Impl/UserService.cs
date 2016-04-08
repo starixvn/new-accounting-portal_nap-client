@@ -1,6 +1,5 @@
 ﻿namespace Fanex.NAP.Core.Service.Impl
 {
-    using System.Collections.Generic;
     using Fanex.Common.Helper;
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Clients;
@@ -9,6 +8,8 @@
     using Fanex.NAP.Core.Models.ValueObject;
     using Fanex.NAP.Core.Service.Interface;
     using Models.ParameterObject;
+    using System.Collections.Generic;
+
     public class UserService : IUserService
     {
         private readonly UserClient _userClient;

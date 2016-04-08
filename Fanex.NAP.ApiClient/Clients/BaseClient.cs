@@ -1,15 +1,15 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
+    using Fanex.NAP.Core.Exceptions;
+    using Fanex.NAP.Core.Extensions;
+    using Fanex.NAP.Core.Web;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
-    using Fanex.NAP.Core.Exceptions;
-    using Fanex.NAP.Core.Extensions;
-    using Fanex.NAP.Core.Web;
-    using Newtonsoft.Json;
 
     internal class BaseClient
     {
@@ -46,7 +46,7 @@
                 }
                 else if (respone.Result.StatusCode == HttpStatusCode.InternalServerError)
                 {
-                    throw new NAPApiException(ViewResources.System_Error);
+                    throw new NAPApiException(respone.Result.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {

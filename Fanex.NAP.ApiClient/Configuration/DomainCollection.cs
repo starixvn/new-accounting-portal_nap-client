@@ -1,7 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Configuration
 {
     using System.Configuration;
-    using System.Diagnostics.CodeAnalysis;
 
     public class DomainCollection : ConfigurationElementCollection
     {

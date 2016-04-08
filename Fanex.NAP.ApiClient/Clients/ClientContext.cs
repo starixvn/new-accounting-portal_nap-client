@@ -1,11 +1,11 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using System;
-    using System.Linq;
-    using System.Net.Http;
     using Fanex.NAP.Core.Configuration;
     using Fanex.NAP.Core.Exceptions;
     using Fanex.NAP.Core.Web.Handler;
+    using System;
+    using System.Linq;
+    using System.Net.Http;
 
     internal static class ClientContext
     {

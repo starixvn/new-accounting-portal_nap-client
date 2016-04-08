@@ -1,8 +1,5 @@
 ﻿namespace Fanex.NAP.Core.Models.ValueObject
 {
-    using System;
-    using System.Diagnostics.CodeAnalysis;
- 
     public class SiteUrl
     {
         public int SiteUrlId { get; set; }

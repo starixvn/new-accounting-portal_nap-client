@@ -2,7 +2,6 @@
 {
     using System;
     using System.Net.Http;
-    using Fanex.NAP.Core.Web.Handler;
 
     internal sealed class NAPClients
     {

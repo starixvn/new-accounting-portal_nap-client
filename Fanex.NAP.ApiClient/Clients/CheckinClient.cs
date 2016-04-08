@@ -2,7 +2,6 @@
 {
     using System;
     using System.Net.Http;
-    using Fanex.NAP.Core.Models.ParameterObject;
 
     internal class CheckinClient : BaseClient
     {

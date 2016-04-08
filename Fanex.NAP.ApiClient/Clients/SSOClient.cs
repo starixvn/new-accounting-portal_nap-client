@@ -1,9 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
+    using Fanex.NAP.Core.Models.ParameterObject;
     using System;
     using System.Net.Http;
-    using Fanex.NAP.Core.Models.ParameterObject;
-    using Fanex.NAP.Core.Web.Handler;
 
     internal class SSOClient : BaseClient
     {

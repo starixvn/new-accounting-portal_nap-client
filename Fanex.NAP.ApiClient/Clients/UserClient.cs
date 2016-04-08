@@ -1,11 +1,11 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Net.Http;
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Models;
     using Fanex.NAP.Core.Models.ValueObject;
+    using System;
+    using System.Collections.Generic;
+    using System.Net.Http;
 
     internal class UserClient : BaseClient
     {

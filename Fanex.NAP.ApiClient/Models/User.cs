@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Models
 {
     using System;
-    
+
     [Serializable]
     public class User
     {
