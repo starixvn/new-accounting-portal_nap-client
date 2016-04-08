@@ -5,6 +5,7 @@
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Models;
     using Fanex.NAP.Core.Models.ValueObject;
+    using Models.ParameterObject;
 
     public interface IUserService
     {
@@ -25,5 +26,7 @@
         bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT);
 
         bool IsHavingPermission(int userId, int siteId, string functionKey, Constant.Policy policy);
+
+        bool UpdateProfile(UpdateUserInfoParameter parameter);
     }
 }
