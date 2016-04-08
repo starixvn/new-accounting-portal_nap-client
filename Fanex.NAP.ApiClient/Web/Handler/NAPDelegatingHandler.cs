@@ -60,7 +60,9 @@
                 string requestSignatureBase64String = Convert.ToBase64String(signatureBytes);
 
                 // Setting the values in the Authorization header using custom scheme (amx)
-                request.Headers.Authorization = new AuthenticationHeaderValue("amx", string.Format("{0}:{1}:{2}:{3}", _appId, requestSignatureBase64String, nonce, requestTimeStamp));
+                request.Headers.Authorization = new AuthenticationHeaderValue(
+                    "amx",
+                    string.Format("{0}:{1}:{2}:{3}", _appId, requestSignatureBase64String, nonce, requestTimeStamp));
             }
 
             var response = base.SendAsync(request, cancellationToken);

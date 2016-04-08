@@ -21,7 +21,9 @@
 
         public IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string env = Constant.UAT, bool? isActive = null)
         {
-            return Get<IEnumerable<MenuItem>>(CreateRequestUri(string.Format(RelativePaths.GetMenuItem, userId), new { siteId = siteId, environment = env, isActive = isActive }));
+            return Get<IEnumerable<MenuItem>>(CreateRequestUri(
+                string.Format(RelativePaths.GetMenuItem, userId),
+                new { siteId = siteId, environment = env, isActive = isActive }));
         }
 
         public IEnumerable<SiteLevel> GetSiteLevel(int userId, string env = Constant.UAT)

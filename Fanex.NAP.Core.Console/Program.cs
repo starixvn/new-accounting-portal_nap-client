@@ -1,12 +1,11 @@
 ﻿namespace Fanex.NAP.Core.Console
 {
+    using Fanex.NAP.Core.Service.Impl;
+    using Models.ParameterObject;
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Fanex.NAP.Core.Service.Impl;
-    using Models.ParameterObject;
-    using Web.Session;
-    using Models;
+
     public class Program
     {
         public static void Main(string[] args)
@@ -16,8 +15,8 @@
 
             var user = userService.Get(8);
             var menuItem = (new SiteService()).GetMenuItemBySiteId(12, "UAT");
-            //var result = UpdatePassword();
-            //result = UpdateProfile();
+            var result = UpdatePassword();
+            result = UpdateProfile();
 
             Console.ReadLine();
         }
