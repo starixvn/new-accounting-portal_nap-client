@@ -73,7 +73,7 @@
 
             _client.Get(userId);
 
-            var expectedRequestUri = "http://10.18.200.209:1710/api/user/1";
+            var expectedRequestUri = "http://10.18.200.209:1710/api/user?userId=1";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
 
