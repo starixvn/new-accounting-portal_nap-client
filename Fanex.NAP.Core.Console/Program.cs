@@ -39,8 +39,8 @@
         {
             UpdateUserPasswordParameter parameter = new UpdateUserPasswordParameter
             {
-                CustId = 1081978,
-                UserPwd = "1234aa",
+                CustId = 8,
+                UserPwd = "56E8A2D78170E87C928E480797CC73",
             };
 
             var result = (new SecurityService()).UpdatePassword(parameter);
