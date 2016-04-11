@@ -30,20 +30,14 @@
                 LastName = "Test"
             };
 
-            var result = (new UserService()).UpdateProfile(parameter);
+            var result = (new SecurityService()).UpdateProfile(parameter);
 
             return result;
         }
 
         private static bool UpdatePassword()
         {
-            UpdateUserPasswordParameter parameter = new UpdateUserPasswordParameter
-            {
-                CustId = 8,
-                UserPwd = "56E8A2D78170E87C928E480797CC73",
-            };
-
-            var result = (new SecurityService()).UpdatePassword(parameter);
+            var result = (new SecurityService()).UpdatePassword(8, "56E8A2D78170E87C928E480797CC73");
             return result;
         }
 
