@@ -27,15 +27,12 @@
         [Test]
         public void UpdatePassword_WhenCalled_RequestUri()
         {
-            UpdateUserPasswordParameter parameter = new UpdateUserPasswordParameter
-            {
-                CustId = 1,
-                UserPwd = "1234",
-            };
+            int userId = 1;
+            string password = "1234";
 
-            _client.UpdatePassword(parameter);
+            _client.UpdatePassword(userId, password);
 
-            var expectedRequestUri = "http://10.18.200.209:1710/api/userinfo/updatePassword";
+            var expectedRequestUri = "http://10.18.200.209:1710/api/userinfo/updatePassword?userId=1&password=1234";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
 

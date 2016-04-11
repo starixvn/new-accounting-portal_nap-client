@@ -11,9 +11,9 @@
         {
         }
 
-        public bool UpdatePassword(UpdateUserPasswordParameter parameter)
+        public bool UpdatePassword(int userId, string password)
         {
-            return Send<UpdateUserPasswordParameter, bool>(CreateRequestUri(RelativePaths.UpdatePassword), HttpMethod.Post, parameter);
+            return Send<object, bool>(CreateRequestUri(RelativePaths.UpdatePassword, new {userId = userId, password = password}), HttpMethod.Post, null);
         }
 
         public bool UpdateProfile(UpdateUserInfoParameter parameter)
