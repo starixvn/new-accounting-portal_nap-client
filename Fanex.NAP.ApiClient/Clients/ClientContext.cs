@@ -26,17 +26,7 @@
 
         private static HttpClient CreateHttpClient()
         {
-            if (Configuration.UseWindowsAuthentication)
-            {
-                return new HttpClient(new HttpClientHandler
-                {
-                    UseDefaultCredentials = true
-                });
-            }
-            else
-            {
-                return HttpClientFactory.Create(new NAPDelegatingHandler(Configuration.SiteId.ToString(), Configuration.AccessKey));
-            }
+            return HttpClientFactory.Create(new NAPDelegatingHandler(Configuration.SiteId.ToString(), Configuration.AccessKey));
         }
 
         public static string GetServiceUrl()
