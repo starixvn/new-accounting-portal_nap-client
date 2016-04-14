@@ -16,7 +16,6 @@
         private const string NAPDomain = "Domain";
         private const string NAPDomainAdd = "add";
         private const string NAPCacheDuration = "CacheDuration";
-        private const string NAPUseWindowsAuthentication = "UseWindowsAuthentication";
 
         private static NapSettings _settings = ConfigurationManager.GetSection(NAPSettings) as NapSettings;
 
