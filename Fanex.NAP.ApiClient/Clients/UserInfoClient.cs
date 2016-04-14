@@ -13,7 +13,7 @@
 
         public bool UpdatePassword(int userId, string password)
         {
-            return Send<object, bool>(CreateRequestUri(RelativePaths.UpdatePassword, new {userId = userId, password = password}), HttpMethod.Post, null);
+            return Send<object, bool>(CreateRequestUri(RelativePaths.UpdatePassword, new { userId = userId, password = password }), HttpMethod.Post, null);
         }
 
         public bool UpdateProfile(UpdateUserInfoParameter parameter)
