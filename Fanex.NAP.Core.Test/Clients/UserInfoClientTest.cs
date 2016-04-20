@@ -1,7 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Test.Clients
 {
-    using Fanex.NAP.Core.Clients;
-    using Fanex.NAP.Core.Models.ParameterObject;
+    using Configuration;
+    using Core.Clients;
+    using Models.ParameterObject;
     using NSubstitute;
     using NUnit.Framework;
     using System;
@@ -29,10 +30,11 @@
         {
             int userId = 1;
             string password = "1234";
+            var siteId = 1;
 
-            _client.UpdatePassword(userId, password);
+            _client.UpdatePassword(siteId, userId, password);
 
-            var expectedRequestUri = "http://10.18.200.209:1710/api/userinfo/updatePassword?userId=1&password=1234";
+            var expectedRequestUri = "http://10.18.200.209:1710/api/userinfo/updatePassword?siteId=1&userId=1&password=1234";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
 
@@ -46,10 +48,11 @@
                 LastName = "lastName",
                 Email = "email@email.com"
             };
+            var siteId = 1;
 
-            _client.UpdateProfile(parameter);
+            _client.UpdateProfile(siteId, parameter);
 
-            var expectedRequestUri = "http://10.18.200.209:1710/api/userinfo/updateProfile";
+            var expectedRequestUri = "http://10.18.200.209:1710/api/userinfo/updateProfile?siteId=1";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
     }
