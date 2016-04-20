@@ -14,8 +14,8 @@
 
         int SSOLogin(SSOLoginParameter parameter);
 
-        bool UpdatePassword(int userId, string password);
+        bool UpdatePassword(int siteId, int userId, string password);
 
-        bool UpdateProfile(UpdateUserInfoParameter parameter);
+        bool UpdateProfile(int siteId, UpdateUserInfoParameter parameter);
     }
 }

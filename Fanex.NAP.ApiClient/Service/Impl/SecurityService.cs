@@ -57,19 +57,21 @@
             return _ssoClient.Login(parameter);
         }
 
-        public bool UpdatePassword(int userId, string password)
+        public bool UpdatePassword(int siteId, int userId, string password)
         {
+            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
             Check.Argument.IsNotNegativeOrZero(userId, "parameter");
             Check.Argument.IsNotEmpty(password, "password");
 
-            return _userInfoClient.UpdatePassword(userId, password);
+            return _userInfoClient.UpdatePassword(siteId, userId, password);
         }
 
-        public bool UpdateProfile(UpdateUserInfoParameter parameter)
+        public bool UpdateProfile(int siteId, UpdateUserInfoParameter parameter)
         {
+            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
             Check.Argument.IsNotNull(parameter, "parameter");
 
-            return _userInfoClient.UpdateProfile(parameter);
+            return _userInfoClient.UpdateProfile(siteId, parameter);
         }
     }
 }
