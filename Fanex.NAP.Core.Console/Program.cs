@@ -1,5 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Console
 {
+    using Configuration;
     using Fanex.NAP.Core.Service.Impl;
     using Models.ParameterObject;
     using System;
@@ -16,7 +17,7 @@
             var user = userService.Get(8);
             var menuItem = (new SiteService()).GetMenuItemBySiteId(12, "UAT");
             var result = UpdatePassword();
-            result = UpdateProfile();
+            var result1 = UpdateProfile();
 
             Console.ReadLine();
         }
@@ -30,14 +31,14 @@
                 LastName = "Test"
             };
 
-            var result = (new SecurityService()).UpdateProfile(parameter);
+            var result = (new SecurityService()).UpdateProfile(NapSettings.Settings.SiteId, parameter);
 
             return result;
         }
 
         private static bool UpdatePassword()
         {
-            var result = (new SecurityService()).UpdatePassword(8, "56E8A2D78170E87C928E480797CC73");
+            var result = (new SecurityService()).UpdatePassword(NapSettings.Settings.SiteId, 8, "56E8A2D78170E87C928E480797CC73");
             return result;
         }
 
