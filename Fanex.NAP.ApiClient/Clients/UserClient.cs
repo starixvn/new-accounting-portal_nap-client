@@ -33,7 +33,7 @@
 
         public User Get(int userId)
         {
-            return Get<User>(CreateRequestUri(string.Format(RelativePaths.GetById), new { userId = userId }));
+            return Get<User>(CreateRequestUri(string.Format(RelativePaths.GetById, userId)));
         }
 
         public User Get(string username)
@@ -61,7 +61,7 @@
             public const string HasAnyPermission = "/user/{0}/functionPolicy";
             public const string GetMenuItem = "/user/{0}/menuItem";
             public const string GetSiteLevel = "/user/{0}/sitelevel";
-            public const string GetById = "/user";
+            public const string GetById = "/user/{0}";
             public const string GetByUsername = "/user";
             public const string GetAll = "/user/";
             public const string GetUserLevel = "/user/{0}/levelonsite/{1}";
