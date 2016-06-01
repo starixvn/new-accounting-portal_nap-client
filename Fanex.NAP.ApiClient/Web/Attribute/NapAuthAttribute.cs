@@ -158,7 +158,7 @@
             }
         }
 
-        protected void HandleForbiddenAjaxRequest(AuthorizationContext filterContext, HttpResponseBase response)
+        protected virtual void HandleForbiddenAjaxRequest(AuthorizationContext filterContext, HttpResponseBase response)
         {
             var messageContent = string.Format("<center><b>{0}</b></center>", ViewResources.UnauthorizeMsg);
 
