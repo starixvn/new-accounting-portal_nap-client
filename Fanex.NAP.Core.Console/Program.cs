@@ -1,11 +1,11 @@
 ﻿namespace Fanex.NAP.Core.Console
 {
-    using Configuration;
-    using Fanex.NAP.Core.Service.Impl;
-    using Models.ParameterObject;
     using System;
     using System.Threading;
     using System.Threading.Tasks;
+    using Configuration;
+    using Fanex.NAP.Core.Service.Impl;
+    using Models.ParameterObject;
 
     public class Program
     {
@@ -14,11 +14,26 @@
             var groupService = new GroupService();
             var userService = new UserService();
 
-            var user = userService.Get("sa");
+            var functionPolicies = userService.GetPermissions(633564, 12, 662);
+            //var user = userService.Get("sa");
+
+            //var user = (new SecurityService()).Login(new LoginParameter
+            //{
+            //    UserId = 8,
+            //    SiteId = 98,
+            //    LoginDate = DateTime.Today
+            //});
+
+            //var onuserid = (new SecurityService()).SSOLogin(new SSOLoginParameter
+            //{
+            //    CheckOnUserId = 1,
+            //    SiteId = 12,
+            //    LoginDate = DateTime.Today
+            //});
             //var permission = userService.GetPermission(8, 15);
-            var menuItem = (new SiteService()).GetMenuItemBySiteId(12, "UAT");
-            var result = UpdatePassword();
-            var result1 = UpdateProfile();
+            //var menuItem = (new SiteService()).GetMenuItemBySiteId(12, "UAT");
+            //var result = UpdatePassword();
+            //var result1 = UpdateProfile();
 
             Console.ReadLine();
         }

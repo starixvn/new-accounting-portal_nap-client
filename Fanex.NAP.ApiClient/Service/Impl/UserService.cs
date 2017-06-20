@@ -90,5 +90,13 @@
 
             return currentPolicy >= (int)policy;
         }
+
+        public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, int parentFunctionId, string environment = Constant.UAT)
+        {
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
+
+            return _userClient.GetPermissions(userId, siteId, parentFunctionId, environment);
+        }
     }
 }

@@ -121,5 +121,18 @@
             var expectedRequestUri = "http://10.18.200.209:1710/api/user/1/sitepolicy?siteId=2&functionKey=GetAllUser";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
+
+        [Test]
+        public void GetPermissions_WhenCalled_RequestUri()
+        {
+            var userId = 1;
+            var siteId = 2;
+            var parentFunctionId = 12;
+
+            _client.GetPermissions(userId, siteId, parentFunctionId);
+
+            var expectedRequestUri = "http://10.18.200.209:1710/api/user/1/functionPolicies?siteId=2&parentFunctionId=12&environment=UAT";
+            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
+        }
     }
 }

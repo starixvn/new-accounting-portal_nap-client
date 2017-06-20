@@ -56,6 +56,11 @@
             return Get<int>(CreateRequestUri(string.Format(RelativePaths.GetPermission, userId), new { siteId = siteId, functionKey = functionKey }));
         }
 
+        public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, int parentFunctionId, string environment = Constant.UAT)
+            => Get<IEnumerable<FunctionPolicy>>(
+                CreateRequestUri(string.Format(RelativePaths.GetPermissions, userId),
+                new { siteId = siteId, parentFunctionId = parentFunctionId, environment = environment }));
+
         private class RelativePaths
         {
             public const string HasAnyPermission = "/user/{0}/functionPolicy";
@@ -66,6 +71,7 @@
             public const string GetAll = "/user/";
             public const string GetUserLevel = "/user/{0}/levelonsite/{1}";
             public const string GetPermission = "/user/{0}/sitepolicy";
+            public const string GetPermissions = "/user/{0}/functionPolicies";
         }
     }
 }
