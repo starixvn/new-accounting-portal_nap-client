@@ -1,9 +1,9 @@
 ﻿namespace Fanex.NAP.Core.Service.Interface
 {
-    using Fanex.NAP.Core.Business;
-    using Fanex.NAP.Core.Models;
-    using Fanex.NAP.Core.Models.ValueObject;
     using System.Collections.Generic;
+    using Business;
+    using Models;
+    using Models.ValueObject;
 
     public interface IUserService
     {
@@ -24,5 +24,7 @@
         bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT);
 
         bool IsHavingPermission(int userId, int siteId, string functionKey, Constant.Policy policy);
+
+        IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, string parentFunctionKey, string environment = Constant.UAT);
     }
 }

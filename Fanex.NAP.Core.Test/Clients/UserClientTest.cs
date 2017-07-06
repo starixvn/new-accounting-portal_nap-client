@@ -127,11 +127,11 @@
         {
             var userId = 1;
             var siteId = 2;
-            var parentFunctionId = 12;
+            var parentFunctionKey = "ParentKey";
 
-            _client.GetPermissions(userId, siteId, parentFunctionId);
+            _client.GetPermissions(userId, siteId, parentFunctionKey);
 
-            var expectedRequestUri = "http://10.18.200.209:1710/api/user/1/functionPolicies?siteId=2&parentFunctionId=12&environment=UAT";
+            var expectedRequestUri = "http://10.18.200.209:1710/api/user/1/functionPolicies?siteId=2&parentFunctionKey=ParentKey&environment=UAT";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
     }

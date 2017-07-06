@@ -56,10 +56,10 @@
             return Get<int>(CreateRequestUri(string.Format(RelativePaths.GetPermission, userId), new { siteId = siteId, functionKey = functionKey }));
         }
 
-        public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, int parentFunctionId, string environment = Constant.UAT)
+        public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, string parentFunctionKey, string environment = Constant.UAT)
             => Get<IEnumerable<FunctionPolicy>>(
                 CreateRequestUri(string.Format(RelativePaths.GetPermissions, userId),
-                new { siteId = siteId, parentFunctionId = parentFunctionId, environment = environment }));
+                new { siteId = siteId, parentFunctionKey = parentFunctionKey, environment = environment }));
 
         private class RelativePaths
         {

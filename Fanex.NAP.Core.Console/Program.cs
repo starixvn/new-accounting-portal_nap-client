@@ -14,7 +14,7 @@
             var groupService = new GroupService();
             var userService = new UserService();
 
-            var functionPolicies = userService.GetPermissions(633564, 12, 662);
+            var functionPolicies = userService.GetPermissions(633564, 12, "MailService");
             //var user = userService.Get("sa");
 
             //var user = (new SecurityService()).Login(new LoginParameter

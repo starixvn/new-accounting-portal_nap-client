@@ -1,13 +1,13 @@
 ﻿namespace Fanex.NAP.Core.Service.Impl
 {
-    using Fanex.Common.Helper;
-    using Fanex.NAP.Core.Business;
-    using Fanex.NAP.Core.Clients;
-    using Fanex.NAP.Core.Extensions;
-    using Fanex.NAP.Core.Models;
-    using Fanex.NAP.Core.Models.ValueObject;
-    using Fanex.NAP.Core.Service.Interface;
     using System.Collections.Generic;
+    using Business;
+    using Clients;
+    using Common.Helper;
+    using Extensions;
+    using Interface;
+    using Models;
+    using Models.ValueObject;
 
     public class UserService : IUserService
     {
@@ -91,12 +91,12 @@
             return currentPolicy >= (int)policy;
         }
 
-        public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, int parentFunctionId, string environment = Constant.UAT)
+        public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, string parentFunctionKey, string environment = Constant.UAT)
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
 
-            return _userClient.GetPermissions(userId, siteId, parentFunctionId, environment);
+            return _userClient.GetPermissions(userId, siteId, parentFunctionKey, environment);
         }
     }
 }
