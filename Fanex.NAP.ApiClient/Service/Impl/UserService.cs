@@ -98,5 +98,13 @@
 
             return _userClient.GetPermissions(userId, siteId, parentFunctionKey, environment);
         }
+
+        public IEnumerable<UserPolicy> GetUserPolicies(string functionKey, int siteId)
+        {
+            Check.Argument.IsNotEmpty(functionKey, "functionKey");
+            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
+
+            return _userClient.GetUserPolicies(functionKey, siteId);
+        }
     }
 }

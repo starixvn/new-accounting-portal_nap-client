@@ -96,6 +96,7 @@
     <Compile Include="Models\ValueObject\FunctionPolicy.cs" />
     <Compile Include="Models\ValueObject\SiteLevel.cs" />
     <Compile Include="Models\ValueObject\SiteUrl.cs" />
+    <Compile Include="Models\ValueObject\UserPolicy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Service\Interface\IGroupService.cs" />
     <Compile Include="Service\Interface\ISecurityService.cs" />

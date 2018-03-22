@@ -16,14 +16,14 @@
 
         public bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT)
         {
-            return Get<bool>(CreateRequestUri(string.Format(RelativePaths.HasAnyPermission, userId), new { siteId = siteId, environment = environment }));
+            return Get<bool>(CreateRequestUri(string.Format(RelativePaths.HasAnyPermission, userId), new { siteId, environment }));
         }
 
         public IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string env = Constant.UAT, bool? isActive = null)
         {
             return Get<IEnumerable<MenuItem>>(CreateRequestUri(
                 string.Format(RelativePaths.GetMenuItem, userId),
-                new { siteId = siteId, environment = env, isActive = isActive }));
+                new { siteId, environment = env, isActive }));
         }
 
         public IEnumerable<SiteLevel> GetSiteLevel(int userId, string env = Constant.UAT)
@@ -38,7 +38,7 @@
 
         public User Get(string username)
         {
-            return Get<User>(CreateRequestUri(string.Format(RelativePaths.GetByUsername), new { username = username }));
+            return Get<User>(CreateRequestUri(RelativePaths.GetByUsername, new { username }));
         }
 
         public IEnumerable<User> GetAll()
@@ -53,15 +53,18 @@
 
         public int GetPermission(int userId, int siteId, string functionKey)
         {
-            return Get<int>(CreateRequestUri(string.Format(RelativePaths.GetPermission, userId), new { siteId = siteId, functionKey = functionKey }));
+            return Get<int>(CreateRequestUri(string.Format(RelativePaths.GetPermission, userId), new { siteId, functionKey }));
         }
 
         public IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, string parentFunctionKey, string environment = Constant.UAT)
             => Get<IEnumerable<FunctionPolicy>>(
                 CreateRequestUri(string.Format(RelativePaths.GetPermissions, userId),
-                new { siteId = siteId, parentFunctionKey = parentFunctionKey, environment = environment }));
+                new { siteId, parentFunctionKey, environment }));
 
-        private class RelativePaths
+        public IEnumerable<UserPolicy> GetUserPolicies(string functionKey, int siteId)
+            => Get<IEnumerable<UserPolicy>>(CreateRequestUri(RelativePaths.GetUserPolicies, new { functionKey, siteId }));
+
+        private static class RelativePaths
         {
             public const string HasAnyPermission = "/user/{0}/functionPolicy";
             public const string GetMenuItem = "/user/{0}/menuItem";
@@ -72,6 +75,7 @@
             public const string GetUserLevel = "/user/{0}/levelonsite/{1}";
             public const string GetPermission = "/user/{0}/sitepolicy";
             public const string GetPermissions = "/user/{0}/functionPolicies";
+            public const string GetUserPolicies = "/user/userPolicies";
         }
     }
 }

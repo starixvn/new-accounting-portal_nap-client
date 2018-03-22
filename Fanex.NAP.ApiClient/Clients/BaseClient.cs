@@ -38,19 +38,19 @@
 
             var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
 
-            using (var respone = _httpClient.SendAsync(message))
+            using (var response = _httpClient.SendAsync(message))
             {
-                if (respone.Result.StatusCode == HttpStatusCode.Unauthorized)
+                if (response.Result.StatusCode == HttpStatusCode.Unauthorized)
                 {
                     throw new NAPApiException(string.Format(ViewResources.Dont_Have_Permission, requestUri));
                 }
-                else if (respone.Result.StatusCode == HttpStatusCode.InternalServerError)
+                else if (response.Result.StatusCode == HttpStatusCode.InternalServerError)
                 {
-                    throw new NAPApiException(respone.Result.Content.ReadAsStringAsync().Result);
+                    throw new NAPApiException(response.Result.Content.ReadAsStringAsync().Result);
                 }
                 else
                 {
-                    var content = respone.Result.Content.ReadAsStringAsync().Result;
+                    var content = response.Result.Content.ReadAsStringAsync().Result;
 
                     if (!string.IsNullOrWhiteSpace(content))
                     {
