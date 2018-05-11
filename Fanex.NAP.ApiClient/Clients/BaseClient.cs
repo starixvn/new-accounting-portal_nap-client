@@ -54,7 +54,14 @@
 
                     if (!string.IsNullOrWhiteSpace(content))
                     {
-                        result = JsonConvert.DeserializeObject<T>(content);
+                        try
+                        {
+                            result = JsonConvert.DeserializeObject<T>(content);
+                        }
+                        catch
+                        {
+                            throw new NAPApiException(content);
+                        }
                     }
                 }
             }
