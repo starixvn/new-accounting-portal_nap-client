@@ -48,6 +48,7 @@
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Http, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Web.Mvc, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -106,6 +107,8 @@
     <Compile Include="Service\Impl\UserService.cs" />
     <Compile Include="Service\Impl\GroupService.cs" />
     <Compile Include="Service\Impl\SecurityService.cs" />
+    <Compile Include="Web\Attribute\NapAPISuperAuthAttribute.cs" />
+    <Compile Include="Web\Attribute\NapAPIAuthAttribute.cs" />
     <Compile Include="Web\Attribute\NapAuthAttribute.cs" />
     <Compile Include="Web\Attribute\NapSuperAuthAttribute.cs" />
     <Compile Include="Web\Auth\AuthInfo.cs" />
