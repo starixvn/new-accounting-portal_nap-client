@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.24720.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.Core.Console", "Fanex.NAP.Core.Console\Fanex.NAP.Core.Console.csproj", "{1DF86D08-C21B-42B4-99B4-3F795F9C5239}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.Core", "Fanex.NAP.ApiClient\Fanex.NAP.Core.csproj", "{BBBEBE10-B8D5-4945-9A14-AFA514ACD492}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.Core.Client", "Fanex.NAP.ApiClient\Fanex.NAP.Core.Client.csproj", "{BBBEBE10-B8D5-4945-9A14-AFA514ACD492}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.Core.Test", "Fanex.NAP.Core.Test\Fanex.NAP.Core.Test.csproj", "{5F47F45D-335D-4AE0-9EF2-E0997C62E24C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.Core.SignIn", "Fanex.Nap.Core.SignIn\Fanex.NAP.Core.SignIn.csproj", "{187880A6-1921-470F-BED8-572AB18ADA9E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{5F47F45D-335D-4AE0-9EF2-E0997C62E24C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F47F45D-335D-4AE0-9EF2-E0997C62E24C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F47F45D-335D-4AE0-9EF2-E0997C62E24C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{187880A6-1921-470F-BED8-572AB18ADA9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{187880A6-1921-470F-BED8-572AB18ADA9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{187880A6-1921-470F-BED8-572AB18ADA9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{187880A6-1921-470F-BED8-572AB18ADA9E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

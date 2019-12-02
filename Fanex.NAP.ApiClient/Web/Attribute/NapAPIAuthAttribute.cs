@@ -65,20 +65,12 @@
         {
             base.OnAuthorization(filterContext);
 
-            ICurrentSession session = new CurrentSession();
-
-            if (session == null)
-            {
-                HttpContext.Current.Response.AddHeader("AuthenticationStatus", "NotAuthorized");
-                filterContext.Response = filterContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                return;
-            }
+            var session = new CurrentSession();
 
             if (!IsAuthenticated(session.UserId))
             {
                 HttpContext.Current.Response.AddHeader("AuthenticationStatus", "NotAuthorized");
                 filterContext.Response = filterContext.Request.CreateResponse(HttpStatusCode.Unauthorized);
-                return;
             }
         }
 

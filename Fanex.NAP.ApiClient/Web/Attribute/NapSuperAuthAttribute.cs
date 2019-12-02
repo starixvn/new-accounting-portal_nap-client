@@ -1,10 +1,10 @@
 ﻿namespace Fanex.NAP.Core.Web.Attribute
 {
-    using Fanex.NAP.Core.Web.Session;
     using System;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
+    using Fanex.NAP.Core.Web.Session;
 
     /// <summary>
     /// Super authorize attribute.
@@ -27,21 +27,13 @@
 
             if (!CheckSessionAuthorization())
             {
-                HttpResponseBase response = filterContext.HttpContext.Response;
-
                 if (filterContext.HttpContext.Request.IsAjaxRequest())
                 {
-                    response.Buffer = true;
-                    response.StatusCode = 403; // Unauthorized status code
-                    response.Write("<center><b>" + ViewResources.UnauthorizeMsg + "</b></center>");
-                    response.Flush();
-                    response.Close();
-                    response.End();
+                    filterContext.Result = new HttpUnauthorizedResult("<center><b>" + ViewResources.UnauthorizeMsg + "</b></center>");
                 }
                 else
                 {
-                    var loginUrl = !string.IsNullOrWhiteSpace(FormsAuthentication.LoginUrl) ? FormsAuthentication.LoginUrl : "~/userlogin/login";
-                    filterContext.Result = new RedirectResult(loginUrl);
+                    filterContext.Result = new RedirectResult(FormsAuthentication.LoginUrl);
                 }
             }
         }

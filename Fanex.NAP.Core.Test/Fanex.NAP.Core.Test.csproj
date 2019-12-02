@@ -76,9 +76,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Fanex.NAP.ApiClient\Fanex.NAP.Core.csproj">
+    <ProjectReference Include="..\Fanex.NAP.ApiClient\Fanex.NAP.Core.Client.csproj">
       <Project>{bbbebe10-b8d5-4945-9a14-afa514acd492}</Project>
-      <Name>Fanex.NAP.Core</Name>
+      <Name>Fanex.NAP.Core.Client</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

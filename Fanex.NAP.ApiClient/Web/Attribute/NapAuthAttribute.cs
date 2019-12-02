@@ -1,16 +1,16 @@
 ﻿namespace Fanex.NAP.Core.Web.Attribute
 {
-    using Fanex.NAP.Core.Auth;
-    using Fanex.NAP.Core.Business;
-    using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Service.Impl;
-    using Fanex.NAP.Core.Service.Interface;
     using System;
     using System.Net;
     using System.Runtime.Caching;
     using System.Web;
     using System.Web.Mvc;
     using System.Web.Security;
+    using Fanex.NAP.Core.Auth;
+    using Fanex.NAP.Core.Business;
+    using Fanex.NAP.Core.Configuration;
+    using Fanex.NAP.Core.Service.Impl;
+    using Fanex.NAP.Core.Service.Interface;
 
     [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class NapAuthAttribute : AuthorizeAttribute
@@ -135,17 +135,9 @@
                 return;
             }
 
-            HttpResponseBase response = filterContext.HttpContext.Response;
-
-            if (response == null)
-            {
-                this.SignOut();
-                return;
-            }
-
             if (filterContext.HttpContext.Request.IsAjaxRequest())
             {
-                HandleForbiddenAjaxRequest(filterContext, response);
+                HandleForbiddenAjaxRequest(filterContext);
             }
             else if (!filterContext.HttpContext.Request.IsAuthenticated)
             {
@@ -154,21 +146,13 @@
             else
             {
                 string settingUrl = NapSettings.Settings.UnauthorizeUrl;
-                filterContext.Result = new RedirectResult(string.IsNullOrWhiteSpace(settingUrl) ? "~/Admin/Common/Unauthorize" : settingUrl);
+                filterContext.Result = new RedirectResult(settingUrl);
             }
         }
 
-        protected virtual void HandleForbiddenAjaxRequest(AuthorizationContext filterContext, HttpResponseBase response)
+        protected virtual void HandleForbiddenAjaxRequest(AuthorizationContext filterContext)
         {
-            var messageContent = string.Format("<center><b>{0}</b></center>", ViewResources.UnauthorizeMsg);
-
-            filterContext.Result = new HttpStatusCodeResult((int)HttpStatusCode.Forbidden, messageContent);
-            response.Buffer = true;
-            response.StatusCode = (int)HttpStatusCode.Forbidden;
-            response.Write(messageContent);
-            response.Flush();
-            response.Close();
-            response.End();
+            filterContext.Result = new HttpUnauthorizedResult("<center><b>" + ViewResources.UnauthorizeMsg + "</b></center>");
         }
 
         protected void SignOut()
