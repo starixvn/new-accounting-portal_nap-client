@@ -11,7 +11,7 @@
     using System.Net.Http;
     using System.Net.Http.Formatting;
 
-    internal class BaseClient
+    internal class BaseClient : IDisposable
     {
         private readonly HttpClient _httpClient;
         private bool _disposed;

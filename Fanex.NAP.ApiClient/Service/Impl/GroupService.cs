@@ -8,18 +8,13 @@
 
     public class GroupService : IGroupService
     {
-        private readonly GroupClient _groupClient;
-
-        public GroupService()
-        {
-            _groupClient = ClientContext.Clients.CreateGroupClient();
-        }
-
         public Group Get(int groupId)
         {
             Check.Argument.IsNotNegativeOrZero(groupId, "groupId");
-
-            return _groupClient.Get(groupId);
+            using (var groupClient = ClientContext.Clients.CreateGroupClient())
+            {
+                return groupClient.Get(groupId);
+            }                
         }
     }
 }

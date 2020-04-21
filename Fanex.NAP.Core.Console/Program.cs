@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Console
 {
     using System;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Fanex.NAP.Core.Service.Impl;
@@ -9,17 +10,28 @@
     {
         public static void Main(string[] args)
         {
-            var userPolicies = new UserService().GetUserPolicies("ManageUser", 1);
+            while (true)
+            {
+                var thread = new Thread(DoAsync);
+                thread.Start();
+
+                Thread.Sleep(500);
+            }
+
             Console.ReadLine();
         }
 
-        public static Task<string> DoAsync()
+
+        public static void DoAsync()
         {
-            return Task.Factory.StartNew(() =>
+            for (var i = 0; i < 20; i++)
             {
-                Thread.Sleep(5000);
-                return "Hello world!";
-            });
+                new UserService().GetUserPolicies("ManageUser", 1).ToArray();
+                //using (var service = new UserService())
+                //{
+                //    service.GetUserPolicies("ManageUser", 1).ToArray();
+                //}
+            }
         }
     }
 }

@@ -10,34 +10,34 @@
 
     public class SiteService : ISiteService
     {
-        private readonly SiteClient _siteClient;
-
-        public SiteService()
-        {
-            _siteClient = ClientContext.Clients.CreateSiteClient();
-        }
-
         public bool IsActivated(int siteId)
         {
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
 
-            return _siteClient.IsActivated(siteId);
+            using (var siteClient = ClientContext.Clients.CreateSiteClient())
+            {
+                return siteClient.IsActivated(siteId);
+            }
         }
 
         public IEnumerable<SiteUrl> GetUrlById(int siteId, string environment)
         {
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
             Check.Argument.IsNotEmpty(environment, "environment");
-
-            return _siteClient.GetUrlById(siteId, environment);
+            using (var siteClient = ClientContext.Clients.CreateSiteClient())
+            {
+                return siteClient.GetUrlById(siteId, environment);
+            }
         }
 
         public IEnumerable<MenuItem> GetMenuItemBySiteId(int siteId, string enviroment, bool? isActive = null)
         {
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
             Check.Argument.IsNotEmpty(enviroment, "enviroment");
-
-            return _siteClient.GetMenuItemBySiteId(siteId, enviroment, isActive);
+            using (var siteClient = ClientContext.Clients.CreateSiteClient())
+            {
+                return siteClient.GetMenuItemBySiteId(siteId, enviroment, isActive);
+            }
         }
     }
 }
