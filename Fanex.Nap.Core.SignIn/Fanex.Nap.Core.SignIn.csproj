@@ -61,6 +61,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http.Formatting, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.4.0.20710.0\lib\net40\System.Net.Http.Formatting.dll</HintPath>
@@ -111,10 +112,8 @@
     <Compile Include="Attribute\SessionAuthorizeApiAttribute.cs" />
     <Compile Include="Attribute\SessionAuthorizeAttribute.cs" />
     <Compile Include="AuthController.cs" />
-    <Compile Include="EmbeddedResourcePathConfiguration.cs" />
     <Compile Include="ErrController.cs" />
     <Compile Include="Models\UpdatePasswordModel.cs" />
-    <Compile Include="SignInHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UserLoginController.cs" />
     <Compile Include="ViewModel\IndexViewModel.cs" />
@@ -127,10 +126,8 @@
     <EmbeddedResource Include="Views\Index.cshtml" />
     <EmbeddedResource Include="Views\Offline.cshtml" />
     <EmbeddedResource Include="Views\ChangePassword.cshtml" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
     <EmbeddedResource Include="Views\NotFound.cshtml" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\cryptojs.js" />

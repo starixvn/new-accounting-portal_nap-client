@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -87,7 +89,7 @@ namespace Fanex.NAP.Core.SignIn
                 return Redirect(NapSettings.Settings.HubUrl);
             }
 
-            return View("Fanex.NAP.Core.SignIn.Views.Index", indexViewModel);
+            return View("Index", indexViewModel);
         }
 
         [ValidateAntiForgeryToken]
@@ -124,7 +126,18 @@ namespace Fanex.NAP.Core.SignIn
                             {
                                 if (UserIsActiveOnThisSite(siteLevelList))
                                 {
-                                    return Redirect(FormsAuthentication.DefaultUrl);
+                                    var aspNetCoreAuth = GetAspNetCoreAuth();
+                                    if (!string.IsNullOrEmpty(aspNetCoreAuth))
+                                    {
+                                        var defaultUrl = GetNetCoreAuthRedirectUrl(aspNetCoreAuth, FormsAuthentication.DefaultUrl);
+                                        var aspNetCoreAuthUrl = aspNetCoreAuth
+                                            + $"/Login?username={username}&password={password}&loginToken={loginToken}&redirectUrl={defaultUrl}";
+                                        return Redirect(aspNetCoreAuthUrl);
+                                    }
+                                    else
+                                    {
+                                        return Redirect(FormsAuthentication.DefaultUrl);
+                                    }
                                 }
                                 else
                                 {
@@ -161,7 +174,20 @@ namespace Fanex.NAP.Core.SignIn
             GenerateNewToken();
             indexViewModel.FormToken = FormToken;
 
-            return View("Fanex.NAP.Core.SignIn.Views.Index", indexViewModel);
+            return View("Index", indexViewModel);
+        }
+
+        private string GetNetCoreAuthRedirectUrl(string aspNetCoreAuth, string defaultUrl)
+        {
+            var redirectUrl = new Uri(Request.Url, defaultUrl).ToString();
+            var isSsl = aspNetCoreAuth.StartsWith("https", StringComparison.CurrentCultureIgnoreCase)
+                && redirectUrl.IndexOf("https", StringComparison.CurrentCultureIgnoreCase) < 0;
+            if (isSsl)
+            {
+                redirectUrl = Regex.Replace(redirectUrl, "http", "https", RegexOptions.IgnoreCase);
+            }
+
+            return HttpUtility.UrlEncode(redirectUrl);
         }
 
         #endregion sign in
@@ -172,6 +198,14 @@ namespace Fanex.NAP.Core.SignIn
         public ActionResult LogOut()
         {
             DoSignOut();
+
+            var aspNetCoreAuth = GetAspNetCoreAuth();
+            if (!string.IsNullOrEmpty(aspNetCoreAuth))
+            {
+                var redirectUrl = GetNetCoreAuthRedirectUrl(aspNetCoreAuth, FormsAuthentication.LoginUrl); ;
+
+                return Redirect(aspNetCoreAuth + $"/LogOut?redirectUrl={redirectUrl}");
+            }
 
             return Redirect(FormsAuthentication.LoginUrl);
         }
@@ -351,6 +385,20 @@ namespace Fanex.NAP.Core.SignIn
             }
         }
 
+        private string GetAspNetCoreAuth()
+        {
+            var aspNetCoreAuth = ConfigurationManager.AppSettings["AspNetCoreAuth"];
+            if (!string.IsNullOrEmpty(aspNetCoreAuth))
+            {
+                var applicationPath = Request.ApplicationPath.Replace("/", "");
+                applicationPath = "NetCore" + applicationPath;
+                aspNetCoreAuth = aspNetCoreAuth.Replace("{ApplicationPath}", applicationPath);
+                return aspNetCoreAuth;
+            }
+
+            return string.Empty;
+        }
+
         #endregion helpers
 
         #region common
@@ -368,19 +416,19 @@ namespace Fanex.NAP.Core.SignIn
 
             var viewModel = new MaintenanceViewModel { UmtFrom = downTime.From, UmtTo = downTime.To };
 
-            return View("Fanex.NAP.Core.SignIn.Views.Offline", viewModel);
+            return View("Offline", viewModel);
         }
 
         [AllowAnonymous]
         public ActionResult AccessDenied()
         {
-            return View("Fanex.NAP.Core.SignIn.Views.AccessDenied");
+            return View("AccessDenied");
         }
 
         [AllowAnonymous]
         public ActionResult Error()
         {
-            return View("Fanex.NAP.Core.SignIn.Views.Error");
+            return View("Error");
         }
 
         [AllowAnonymous]
@@ -438,7 +486,7 @@ namespace Fanex.NAP.Core.SignIn
         [Authorize]
         public ActionResult ChangePassword()
         {
-            return View("Fanex.NAP.Core.SignIn.Views.ChangePassword", new UpdatePasswordModel());
+            return View("ChangePassword", new UpdatePasswordModel());
         }
 
         [HttpPost]
