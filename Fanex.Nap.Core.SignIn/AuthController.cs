@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
@@ -126,13 +125,9 @@ namespace Fanex.NAP.Core.SignIn
                             {
                                 if (UserIsActiveOnThisSite(siteLevelList))
                                 {
-                                    var aspNetCoreAuth = GetAspNetCoreAuth();
-                                    if (!string.IsNullOrEmpty(aspNetCoreAuth))
+                                    if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["NetCoreAuth"]))
                                     {
-                                        var defaultUrl = GetNetCoreAuthRedirectUrl(aspNetCoreAuth, FormsAuthentication.DefaultUrl);
-                                        var aspNetCoreAuthUrl = aspNetCoreAuth
-                                            + $"/Login?username={username}&password={password}&loginToken={loginToken}&redirectUrl={defaultUrl}";
-                                        return Redirect(aspNetCoreAuthUrl);
+                                        return RedirectToAspNetCore(username, password, loginToken);
                                     }
                                     else
                                     {
@@ -177,17 +172,15 @@ namespace Fanex.NAP.Core.SignIn
             return View("Index", indexViewModel);
         }
 
-        private string GetNetCoreAuthRedirectUrl(string aspNetCoreAuth, string defaultUrl)
+        private ActionResult RedirectToAspNetCore(string username, string password, string loginToken)
         {
-            var redirectUrl = new Uri(Request.Url, defaultUrl).ToString();
-            var isSsl = aspNetCoreAuth.StartsWith("https", StringComparison.CurrentCultureIgnoreCase)
-                && redirectUrl.IndexOf("https", StringComparison.CurrentCultureIgnoreCase) < 0;
-            if (isSsl)
-            {
-                redirectUrl = Regex.Replace(redirectUrl, "http", "https", RegexOptions.IgnoreCase);
-            }
+            var redirectUrl = Helper.GetAbsoluteRedirectUrl(Request, Url.Content(FormsAuthentication.DefaultUrl));
+            var encodedRedirectUrl = HttpUtility.UrlEncode(redirectUrl);
 
-            return HttpUtility.UrlEncode(redirectUrl);
+            var aspNetCoreAuthUrl = ConfigurationManager.AppSettings["NetCoreAuth"]
+                + $"/Login?username={username}&password={password}&loginToken={loginToken}&redirectUrl={encodedRedirectUrl}";
+
+            return Redirect(aspNetCoreAuthUrl);
         }
 
         #endregion sign in
@@ -199,12 +192,12 @@ namespace Fanex.NAP.Core.SignIn
         {
             DoSignOut();
 
-            var aspNetCoreAuth = GetAspNetCoreAuth();
-            if (!string.IsNullOrEmpty(aspNetCoreAuth))
+            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["NetCoreAuth"]))
             {
-                var redirectUrl = GetNetCoreAuthRedirectUrl(aspNetCoreAuth, FormsAuthentication.LoginUrl); ;
+                var redirectUrl = Helper.GetAbsoluteRedirectUrl(Request, Url.Content(FormsAuthentication.LoginUrl));
+                var encodedRedirectUrl = HttpUtility.UrlEncode(redirectUrl);
 
-                return Redirect(aspNetCoreAuth + $"/LogOut?redirectUrl={redirectUrl}");
+                return Redirect(ConfigurationManager.AppSettings["NetCoreAuth"] + $"/LogOut?redirectUrl={encodedRedirectUrl}");
             }
 
             return Redirect(FormsAuthentication.LoginUrl);
@@ -383,20 +376,6 @@ namespace Fanex.NAP.Core.SignIn
                 var cookie = new HttpCookie(FormTokenName) { Expires = DateTime.Now.AddDays(-1d) };
                 Response.Cookies.Add(cookie);
             }
-        }
-
-        private string GetAspNetCoreAuth()
-        {
-            var aspNetCoreAuth = ConfigurationManager.AppSettings["AspNetCoreAuth"];
-            if (!string.IsNullOrEmpty(aspNetCoreAuth))
-            {
-                var applicationPath = Request.ApplicationPath.Replace("/", "");
-                applicationPath = "NetCore" + applicationPath;
-                aspNetCoreAuth = aspNetCoreAuth.Replace("{ApplicationPath}", applicationPath);
-                return aspNetCoreAuth;
-            }
-
-            return string.Empty;
         }
 
         #endregion helpers

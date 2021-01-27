@@ -1,6 +1,5 @@
 ﻿namespace Fanex.NAP.Core.SignIn
 {
-    using System;
     using System.Configuration;
     using System.Web;
     using System.Web.Mvc;
@@ -23,7 +22,7 @@
         {
             if (ssoService.IsAuthenticated(userId, onuserId, time, this))
             {
-                var aspNetCoreAuth = ConfigurationManager.AppSettings["AspNetCoreAuth"];
+                var aspNetCoreAuth = ConfigurationManager.AppSettings["NetCoreAuth"];
                 if (!string.IsNullOrEmpty(aspNetCoreAuth))
                 {
                     return RedirectToAspNetCore(userId, onuserId, time, redirectUrl);
@@ -45,15 +44,15 @@
 
         private ActionResult RedirectToAspNetCore(string userId, string onuserId, string time, string redirectUrl)
         {
-            redirectUrl = string.IsNullOrEmpty(redirectUrl)
-                                ? new Uri(Request.Url, FormsAuthentication.DefaultUrl).ToString()
-                                : redirectUrl;
-            redirectUrl = HttpUtility.UrlEncode(redirectUrl);
+            redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.Trim();
 
-            var applicationPath = Request.ApplicationPath.Replace("/", "");
-            var aspNetCoreAuth = ConfigurationManager.AppSettings["AspNetCoreAuth"].Replace("{ApplicationPath}", applicationPath);
-            var aspNetCoreSsoUrl = aspNetCoreAuth
-                + $"/SSO?userId={userId}&onuserId={onuserId}&time={time}&redirectUrl={redirectUrl}";
+            var absoluteRedirectUrl = Helper.GetAbsoluteRedirectUrl(Request, Url.Content(redirectUrl));
+
+            var encodedRedirectUrl = HttpUtility.UrlEncode(absoluteRedirectUrl);
+
+            var aspNetCoreSsoUrl = ConfigurationManager.AppSettings["NetCoreAuth"]
+                + $"/SSO?userId={userId}&onuserId={onuserId}&time={time}&redirectUrl={encodedRedirectUrl}";
+
             return Redirect(aspNetCoreSsoUrl);
         }
     }
