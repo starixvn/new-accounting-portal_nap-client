@@ -1,68 +1,76 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Fanex.NAP.Core.Exceptions;
-    using Fanex.NAP.Core.Extensions;
-    using Fanex.NAP.Core.Web;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Formatting;
+    using System.Threading.Tasks;
+    using Fanex.NAP.Core.Exceptions;
+    using Fanex.NAP.Core.Extensions;
+    using Fanex.NAP.Core.Web;
+    using Newtonsoft.Json;
 
-    internal class BaseClient : IDisposable
+    internal class BaseClient
     {
         private readonly HttpClient _httpClient;
-        private bool _disposed;
 
         public BaseClient(Uri baseEndPoint, HttpClient httpClient)
         {
             BaseAddress = baseEndPoint;
 
             _httpClient = httpClient;
-            _disposed = false;
         }
 
         public Uri BaseAddress { get; set; }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
 
         protected T Get<T>(Uri requestUri)
         {
             T result = default(T);
 
-            var message = new HttpRequestMessage(HttpMethod.Get, requestUri);
-
-            using (var response = _httpClient.SendAsync(message))
+            using (var message = new HttpRequestMessage(HttpMethod.Get, requestUri))
             {
-                if (response.Result.StatusCode == HttpStatusCode.Unauthorized)
+                using (var response = _httpClient.SendAsync(message))
                 {
-                    throw new NAPApiException(string.Format(ViewResources.Dont_Have_Permission, requestUri));
+                    result = GetResponse(requestUri, result, response);
                 }
-                else if (response.Result.StatusCode == HttpStatusCode.InternalServerError)
-                {
-                    throw new NAPApiException(response.Result.Content.ReadAsStringAsync().Result);
-                }
-                else
-                {
-                    var content = response.Result.Content.ReadAsStringAsync().Result;
+            }
 
-                    if (!string.IsNullOrWhiteSpace(content))
-                    {
-                        try
-                        {
-                            result = JsonConvert.DeserializeObject<T>(content);
-                        }
-                        catch
-                        {
-                            throw new NAPApiException(content);
-                        }
-                    }
+            return result;
+        }
+
+        private static T GetResponse<T>(Uri requestUri, T result, Task<HttpResponseMessage> response)
+        {
+            if (response.Result.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new NAPApiException(string.Format(ViewResources.Dont_Have_Permission, requestUri));
+            }
+            else if (response.Result.StatusCode == HttpStatusCode.InternalServerError)
+            {
+                throw new NAPApiException(response.Result.Content.ReadAsStringAsync().Result);
+            }
+            else
+            {
+                var content = response.Result.Content.ReadAsStringAsync().Result;
+
+                result = DeserializeResult(result, content);
+            }
+
+            return result;
+        }
+
+        private static T DeserializeResult<T>(T result, string content)
+        {
+            if (!string.IsNullOrWhiteSpace(content))
+            {
+                try
+                {
+                    result = JsonConvert.DeserializeObject<T>(content);
+                }
+                catch
+                {
+                    throw new NAPApiException(content);
                 }
             }
 
@@ -76,12 +84,18 @@
 
         protected TOutput Send<TInput, TOutput>(Uri requestUri, HttpMethod httpMethod, TInput body)
         {
-            var message = new HttpRequestMessage(httpMethod, requestUri)
+            using (var message = new HttpRequestMessage(httpMethod, requestUri))
             {
-                Content = new ObjectContent<TInput>(body, CreateMediaTypeFormatter())
-            };
-
-            return Send<TOutput>(message, true);
+                using (var objectContent = new ObjectContent<TInput>(body, CreateMediaTypeFormatter()))
+                {
+                    message.Content = new ObjectContent<TInput>(body, CreateMediaTypeFormatter());
+                    using (var response = _httpClient.SendAsync(message))
+                    {
+                        ThrowIfResponseNotSuccessfulAsync(response.Result);
+                        return response.Result.Content.ReadAsAsync<TOutput>().Result;
+                    }
+                }
+            }
         }
 
         protected MediaTypeFormatter CreateMediaTypeFormatter()
@@ -129,34 +143,6 @@
             var uriBuilder = new UriBuilder(BaseAddress + relativePath) { Query = queryString };
 
             return uriBuilder.Uri;
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (!_disposed)
-                {
-                    _httpClient.Dispose();
-                }
-            }
-
-            _disposed = true;
-        }
-
-        private TOutput Send<TOutput>(HttpRequestMessage message, bool hasResult)
-        {
-            using (var response = _httpClient.SendAsync(message))
-            {
-                ThrowIfResponseNotSuccessfulAsync(response.Result);
-
-                if (!hasResult)
-                {
-                    return default(TOutput);
-                }
-
-                return response.Result.Content.ReadAsAsync<TOutput>().Result;
-            }
         }
 
         private void ThrowIfResponseNotSuccessfulAsync(HttpResponseMessage response)

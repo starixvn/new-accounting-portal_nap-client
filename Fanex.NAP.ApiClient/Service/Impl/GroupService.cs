@@ -11,10 +11,10 @@
         public Group Get(int groupId)
         {
             Check.Argument.IsNotNegativeOrZero(groupId, "groupId");
-            using (var groupClient = ClientContext.Clients.CreateGroupClient())
-            {
-                return groupClient.Get(groupId);
-            }                
+            var groupClient = ClientContext.Clients.CreateGroupClient();
+
+            return groupClient.Get(groupId);
+
         }
     }
 }

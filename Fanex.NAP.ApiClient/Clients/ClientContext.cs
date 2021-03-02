@@ -1,15 +1,17 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Exceptions;
-    using Fanex.NAP.Core.Web.Handler;
     using System;
     using System.Linq;
     using System.Net.Http;
+    using Fanex.NAP.Core.Configuration;
+    using Fanex.NAP.Core.Exceptions;
+    using Fanex.NAP.Core.Web.Handler;
 
     internal static class ClientContext
     {
         private static Random _randomHandler = new Random();
+
+        private static HttpClient httpClient = null;
 
         static ClientContext()
         {
@@ -26,7 +28,8 @@
 
         private static HttpClient CreateHttpClient()
         {
-            return HttpClientFactory.Create(new NAPDelegatingHandler(Configuration.SiteId.ToString(), Configuration.AccessKey));
+            httpClient = httpClient ?? HttpClientFactory.Create(new NAPDelegatingHandler(Configuration.SiteId.ToString(), Configuration.AccessKey));
+            return httpClient;
         }
 
         public static string GetServiceUrl()

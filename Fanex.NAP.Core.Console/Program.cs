@@ -11,10 +11,11 @@
         {
             while (true)
             {
-                var thread = new Thread(DoAsync);
-                thread.Start();
-
+                //var thread = new Thread(DoAsync);
+                //thread.Start();
+                DoAsync();
                 Thread.Sleep(500);
+                GC.Collect();
             }
 
             Console.ReadLine();
@@ -23,14 +24,16 @@
 
         public static void DoAsync()
         {
-            for (var i = 0; i < 20; i++)
+            var count = 0;
+            for (var i = 0; i < 100; i++)
             {
-                new UserService().GetUserPolicies("ManageUser", 1).ToArray();
+                count += new UserService().GetUserPolicies("ManageUser", 1).Count();
                 //using (var service = new UserService())
                 //{
                 //    service.GetUserPolicies("ManageUser", 1).ToArray();
                 //}
             }
+            Console.WriteLine(count);
         }
     }
 }
