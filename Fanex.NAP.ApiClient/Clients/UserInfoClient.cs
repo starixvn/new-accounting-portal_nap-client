@@ -1,7 +1,5 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Configuration;
-    using Models.ParameterObject;
     using System;
     using System.Net.Http;
 
@@ -14,18 +12,18 @@
 
         public bool UpdatePassword(int siteId, int userId, string password)
         {
-            return Send<object, bool>(CreateRequestUri(RelativePaths.UpdatePassword, new {siteId = siteId, userId = userId, password = password }), HttpMethod.Post, null);
-        }
-
-        public bool UpdateProfile(int siteId, UpdateUserInfoParameter parameter)
-        {
-            return Send<UpdateUserInfoParameter, bool>(CreateRequestUri(RelativePaths.UpdateProfile, new { siteId = siteId }), HttpMethod.Post, parameter);
+            var parameters = new
+            {
+                siteId,
+                userId,
+                password
+            };
+            return Get<bool>(CreateRequestUri(RelativePaths.UpdatePassword, parameters));
         }
 
         private class RelativePaths
         {
-            public const string UpdatePassword = "/userinfo/updatePassword";
-            public const string UpdateProfile = "/userinfo/updateProfile";
+            public const string UpdatePassword = "userinfo/updatePassword";
         }
     }
 }

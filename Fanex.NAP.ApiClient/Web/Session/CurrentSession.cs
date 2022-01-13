@@ -1,10 +1,10 @@
 ﻿namespace Fanex.NAP.Core.Web.Session
 {
-    using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Models;
     using System;
     using System.Collections.Generic;
     using System.Web;
+    using Fanex.NAP.Core.Configuration;
+    using Models;
 
     /// <summary>
     /// Current session.

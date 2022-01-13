@@ -64,7 +64,6 @@
     <Compile Include="Clients\UserInfoClientTest.cs" />
     <Compile Include="Clients\UserClientTest.cs" />
     <Compile Include="Clients\SSOClientTest.cs" />
-    <Compile Include="Clients\SiteClientTest.cs" />
     <Compile Include="Clients\LogoutClientTest.cs" />
     <Compile Include="Clients\LoginClientTest.cs" />
     <Compile Include="Clients\GroupClientTest.cs" />

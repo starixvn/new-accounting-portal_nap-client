@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Test.Extensions
 {
     using System.Collections.Generic;
-    using Fanex.NAP.Core.Extensions;
+    using Core.Extensions;
     using NUnit.Framework;
 
     [TestFixture]

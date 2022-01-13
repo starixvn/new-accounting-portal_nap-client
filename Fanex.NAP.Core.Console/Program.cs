@@ -4,11 +4,16 @@
     using System.Linq;
     using System.Threading;
     using Fanex.NAP.Core.Service.Impl;
+    using Newtonsoft.Json;
 
     public class Program
     {
         public static void Main(string[] args)
         {
+            var menus = new UserService().GetUserLevel(8, 99);
+            
+            
+            
             while (true)
             {
                 //var thread = new Thread(DoAsync);
@@ -27,7 +32,7 @@
             var count = 0;
             for (var i = 0; i < 100; i++)
             {
-                count += new UserService().GetUserPolicies("ManageUser", 1).Count();
+                
                 //using (var service = new UserService())
                 //{
                 //    service.GetUserPolicies("ManageUser", 1).ToArray();

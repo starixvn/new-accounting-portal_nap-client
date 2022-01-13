@@ -1,10 +1,10 @@
 ﻿namespace Fanex.NAP.Core.Service.Impl
 {
+    using Clients;
     using Fanex.Common.Helper;
-    using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Extensions;
-    using Fanex.NAP.Core.Models.ParameterObject;
     using Fanex.NAP.Core.Service.Interface;
+    using Models.ParameterObject;
 
     public class SecurityService : ISecurityService
     {
@@ -54,14 +54,6 @@
             Check.Argument.IsNotEmpty(password, "password");
             var userInfoClient = ClientContext.Clients.CreateUserInfoClient();
             return userInfoClient.UpdatePassword(siteId, userId, password);
-        }
-
-        public bool UpdateProfile(int siteId, UpdateUserInfoParameter parameter)
-        {
-            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            Check.Argument.IsNotNull(parameter, "parameter");
-            var userInfoClient = ClientContext.Clients.CreateUserInfoClient();
-            return userInfoClient.UpdateProfile(siteId, parameter);
         }
     }
 }

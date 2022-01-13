@@ -55,5 +55,12 @@
 
             return Redirect(aspNetCoreSsoUrl);
         }
+
+        [AllowAnonymous]
+        [HttpGet]
+        public ActionResult Login()
+        {
+            return RedirectToAction("Index", "Auth");
+        }
     }
 }

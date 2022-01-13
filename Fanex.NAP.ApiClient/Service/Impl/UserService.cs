@@ -11,16 +11,6 @@
 
     public class UserService : IUserService
     {
-        public bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT)
-        {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
-            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            Check.Argument.IsNotEmpty(environment, "environment");
-            var userClient = ClientContext.Clients.CreateUserClient();
-
-            return userClient.HasAnyPermission(userId, siteId, environment);
-        }
-
         public IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string environment = Constant.UAT, bool? isActive = null)
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
@@ -59,10 +49,11 @@
             }
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetByFunctionAndSite(string functionKey, int siteId)
         {
             var userClient = ClientContext.Clients.CreateUserClient();
-            return userClient.GetAll();
+
+            return userClient.GetByFunctionAndSite(functionKey, siteId);
         }
 
         public int GetUserLevel(int userId, int siteId)
@@ -101,15 +92,6 @@
             var userClient = ClientContext.Clients.CreateUserClient();
 
             return userClient.GetPermissions(userId, siteId, parentFunctionKey, environment);
-        }
-
-        public IEnumerable<UserPolicy> GetUserPolicies(string functionKey, int siteId)
-        {
-            Check.Argument.IsNotEmpty(functionKey, "functionKey");
-            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            var userClient = ClientContext.Clients.CreateUserClient();
-
-            return userClient.GetUserPolicies(functionKey, siteId);
         }
     }
 }

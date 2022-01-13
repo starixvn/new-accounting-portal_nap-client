@@ -12,12 +12,12 @@
 
         public void Logout(int onlineUserId)
         {
-            Send<int>(CreateRequestUri(RelativePaths.Logout), HttpMethod.Post, onlineUserId);
+            Get<int>(CreateRequestUri(string.Format(RelativePaths.Logout, onlineUserId)));
         }
 
         private class RelativePaths
         {
-            public const string Logout = "/logout/";
+            public const string Logout = "logout/{0}";
         }
     }
 }

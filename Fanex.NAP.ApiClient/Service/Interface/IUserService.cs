@@ -11,17 +11,13 @@
 
         User Get(string username);
 
-        IEnumerable<User> GetAll();
+        int GetUserLevel(int userId, int siteId);
 
         IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string environment = Constant.UAT, bool? isActive = null);
 
         int GetPermission(int userId, int siteId, string functionKey);
 
         IEnumerable<SiteLevel> GetSiteLevel(int userId, string environment = Constant.UAT);
-
-        int GetUserLevel(int userId, int siteId);
-
-        bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT);
 
         bool IsHavingPermission(int userId, int siteId, string functionKey, Constant.Policy policy);
 

@@ -12,7 +12,6 @@
         private const string NAPEnableReCheckin = "EnableReCheckin";
         private const string NAPUnauthorizeUrl = "UnauthorizeUrl";
         private const string NAPServiceUrls = "ServiceUrls";
-        private const string NAPAccessKey = "AccessKey";
         private const string NAPDomain = "Domain";
         private const string NAPDomainAdd = "add";
         private const string NAPCacheDuration = "CacheDuration";
@@ -112,13 +111,6 @@
         {
             get { return (string)this[NAPServiceUrls]; }
             set { this[NAPServiceUrls] = value; }
-        }
-
-        [ConfigurationProperty(NAPAccessKey, IsRequired = true)]
-        public string AccessKey
-        {
-            get { return (string)this[NAPAccessKey]; }
-            set { this[NAPAccessKey] = value; }
         }
 
         [ConfigurationProperty(NAPCacheDuration, IsRequired = false, DefaultValue = 0)]

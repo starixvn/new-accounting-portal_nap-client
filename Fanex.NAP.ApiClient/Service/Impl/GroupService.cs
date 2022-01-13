@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Service.Impl
 {
+    using Clients;
     using Fanex.Common.Helper;
-    using Fanex.NAP.Core.Clients;
     using Fanex.NAP.Core.Extensions;
     using Fanex.NAP.Core.Models;
     using Fanex.NAP.Core.Service.Interface;
@@ -14,7 +14,6 @@
             var groupClient = ClientContext.Clients.CreateGroupClient();
 
             return groupClient.Get(groupId);
-
         }
     }
 }

@@ -5,22 +5,21 @@
     using System.Linq;
     using System.Net;
     using System.Net.Http;
-    using System.Net.Http.Formatting;
+    using System.Text;
     using System.Threading.Tasks;
-    using Fanex.NAP.Core.Exceptions;
-    using Fanex.NAP.Core.Extensions;
-    using Fanex.NAP.Core.Web;
+    using Exceptions;
+    using Extensions;
     using Newtonsoft.Json;
 
     internal class BaseClient
     {
-        private readonly HttpClient _httpClient;
+        private readonly HttpClient httpClient;
 
         public BaseClient(Uri baseEndPoint, HttpClient httpClient)
         {
             BaseAddress = baseEndPoint;
 
-            _httpClient = httpClient;
+            this.httpClient = httpClient;
         }
 
         public Uri BaseAddress { get; set; }
@@ -31,85 +30,64 @@
 
             using (var message = new HttpRequestMessage(HttpMethod.Get, requestUri))
             {
-                using (var response = _httpClient.SendAsync(message))
+                using (var response = httpClient.SendAsync(message).Result)
                 {
-                    result = GetResponse(requestUri, result, response);
+                    result = GetResponse<T>(response).Result;
                 }
             }
 
             return result;
         }
 
-        private static T GetResponse<T>(Uri requestUri, T result, Task<HttpResponseMessage> response)
+        private static async Task<T> GetResponse<T>(HttpResponseMessage response)
         {
-            if (response.Result.StatusCode == HttpStatusCode.Unauthorized)
+            if (response.StatusCode == HttpStatusCode.Unauthorized)
             {
-                throw new NAPApiException(string.Format(ViewResources.Dont_Have_Permission, requestUri));
+                throw new NAPApiException($"No permission");
             }
-            else if (response.Result.StatusCode == HttpStatusCode.InternalServerError)
+            else if (response.StatusCode == HttpStatusCode.InternalServerError)
             {
-                throw new NAPApiException(response.Result.Content.ReadAsStringAsync().Result);
+                throw new NAPApiException(await response.Content.ReadAsStringAsync());
             }
             else
             {
-                var content = response.Result.Content.ReadAsStringAsync().Result;
+                var receivedContent = await response.Content.ReadAsStringAsync();
 
-                result = DeserializeResult(result, content);
+                return DeserializeObject<T>(receivedContent);
             }
-
-            return result;
         }
 
-        private static T DeserializeResult<T>(T result, string content)
+        private static T DeserializeObject<T>(string content)
         {
-            if (!string.IsNullOrWhiteSpace(content))
+            try
             {
-                try
-                {
-                    result = JsonConvert.DeserializeObject<T>(content);
-                }
-                catch
-                {
-                    throw new NAPApiException(content);
-                }
+                return JsonConvert.DeserializeObject<T>(content);
             }
-
-            return result;
-        }
-
-        protected void Send<TInput>(Uri requestUri, HttpMethod httpMethod, TInput body)
-        {
-            Send<TInput, object>(requestUri, httpMethod, body);
-        }
-
-        protected TOutput Send<TInput, TOutput>(Uri requestUri, HttpMethod httpMethod, TInput body)
-        {
-            using (var message = new HttpRequestMessage(httpMethod, requestUri))
+            catch (Exception e)
             {
-                using (var objectContent = new ObjectContent<TInput>(body, CreateMediaTypeFormatter()))
+                throw new FormatException($"=======Received:===\r\n {content}\r\n========", e);
+            }
+        }
+
+        protected TOutput Post<TInput, TOutput>(Uri requestUri, TInput body)
+        {
+            var json = JsonConvert.SerializeObject(body);
+            using (var content = new StringContent(json, Encoding.UTF8, "application/json"))
+            {
+                using (var response = httpClient.PostAsync(requestUri, content).Result)
                 {
-                    message.Content = new ObjectContent<TInput>(body, CreateMediaTypeFormatter());
-                    using (var response = _httpClient.SendAsync(message))
+                    ThrowIfResponseNotSuccessfulAsync(response);
+                    var receivedContent = response.Content.ReadAsStringAsync().Result;
+                    try
                     {
-                        ThrowIfResponseNotSuccessfulAsync(response.Result);
-                        return response.Result.Content.ReadAsAsync<TOutput>().Result;
+                        return JsonConvert.DeserializeObject<TOutput>(receivedContent);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new Exception($"=======Received:===\r\n {receivedContent}\r\n========", e);
                     }
                 }
             }
-        }
-
-        protected MediaTypeFormatter CreateMediaTypeFormatter()
-        {
-            var formatter = new JsonMediaTypeFormatter
-            {
-                SerializerSettings =
-                {
-                    DefaultValueHandling = DefaultValueHandling.Ignore,
-                    NullValueHandling = NullValueHandling.Ignore
-                }
-            };
-
-            return formatter;
         }
 
         protected Uri CreateRequestUri(string relativePath, params KeyValuePair<string, string>[] queryStringParameters)

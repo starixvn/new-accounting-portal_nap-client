@@ -10,19 +10,21 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Fanex.NAP.Core.Configuration;
 using Fanex.NAP.Core.Context;
-using Fanex.NAP.Core.Models;
-using Fanex.NAP.Core.Models.ParameterObject;
 using Fanex.NAP.Core.Models.ValueObject;
 using Fanex.NAP.Core.Service.Impl;
 using Fanex.NAP.Core.SignIn.Models;
 using Fanex.NAP.Core.SignIn.ViewModel;
-using Fanex.NAP.Core.Web;
 using Fanex.NAP.Core.Web.Auth;
 using Fanex.NAP.Core.Web.Session;
-using ONEbook.UM.Services.Impl;
+using ONEbook.UM;
+using ONEbook.UM.Services;
 
 namespace Fanex.NAP.Core.SignIn
 {
+    using Core.Models;
+    using Core.Models.ParameterObject;
+    using Web;
+
     public class AuthController : Controller
     {
         #region members
@@ -31,10 +33,9 @@ namespace Fanex.NAP.Core.SignIn
         private readonly CurrentSession currentSession;
         private readonly SecurityService securityService;
         private readonly GroupService groupService;
-        private readonly SiteService siteService;
         private readonly UserService userService;
         private readonly CurrentContext currentContext;
-        private readonly MaintenanceService maintenanceService;
+        private readonly IMaintenanceService maintenanceService;
 
         #endregion members
 
@@ -44,11 +45,10 @@ namespace Fanex.NAP.Core.SignIn
         {
             userService = new UserService();
             groupService = new GroupService();
-            siteService = new SiteService();
             currentSession = new CurrentSession();
             currentContext = new CurrentContext();
             securityService = new SecurityService();
-            maintenanceService = new MaintenanceService();
+            maintenanceService = new MaintenanceService(UMClientManager.RestClient, UMClientManager.CacheService, UMClientManager.UMClientConfigs, UMClientManager.HttpContext);
         }
 
         #endregion ctors
@@ -107,7 +107,7 @@ namespace Fanex.NAP.Core.SignIn
                     if (password == hashPassword)
                     {
                         ClearToken();
-                        var group = user.Group == null ? null : groupService.Get(user.Group.Id);
+                        var group = user.GroupId == 0 ? null : groupService.Get(user.GroupId);
 
                         var siteLevelList = userService.GetSiteLevel(user.Id, NapSettings.Settings.Environment);
 
@@ -121,7 +121,7 @@ namespace Fanex.NAP.Core.SignIn
                             SaveUserSession(user, username, onUserId);
 
                             if (currentSession.MenuItemList != null &&
-                                currentSession.MenuItemList.Where(m => m.Parent == null).ToList().Count > 0)
+                                currentSession.MenuItemList.Where(m => m.ParentId <= 0).ToList().Count > 0)
                             {
                                 if (UserIsActiveOnThisSite(siteLevelList))
                                 {
@@ -312,7 +312,7 @@ namespace Fanex.NAP.Core.SignIn
 
             foreach (var siteLevel in siteLevelList)
             {
-                if (siteLevel.Site.Id == NapSettings.Settings.SiteId && siteLevel.IsActive)
+                if (siteLevel.SiteId == NapSettings.Settings.SiteId && siteLevel.IsActive)
                 {
                     userIsActiveOnThisSite = true;
                 }
