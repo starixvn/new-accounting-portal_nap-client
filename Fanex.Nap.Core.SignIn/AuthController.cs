@@ -120,30 +120,21 @@ namespace Fanex.NAP.Core.SignIn
 
                             SaveUserSession(user, username, onUserId);
 
-                            if (currentSession.MenuItemList != null &&
-                                currentSession.MenuItemList.Where(m => m.ParentId <= 0).ToList().Count > 0)
+                            if (UserIsActiveOnThisSite(siteLevelList))
                             {
-                                if (UserIsActiveOnThisSite(siteLevelList))
+                                if (!string.IsNullOrEmpty(PropagationAuthUrl))
                                 {
-                                    if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["NetCoreAuth"]))
-                                    {
-                                        return RedirectToAspNetCore(username, password, loginToken);
-                                    }
-                                    else
-                                    {
-                                        return Redirect(FormsAuthentication.DefaultUrl);
-                                    }
+                                    return RedirectToAspNetCore(username, password, loginToken);
                                 }
                                 else
                                 {
-                                    DoSignOut();
-                                    indexViewModel.Message = ViewResources.Your_account_was_suspended;
+                                    return Redirect(FormsAuthentication.DefaultUrl);
                                 }
                             }
                             else
                             {
                                 DoSignOut();
-                                indexViewModel.Message = "You have no permission on any Menu";
+                                indexViewModel.Message = ViewResources.Your_account_was_suspended;
                             }
                         }
                         else
@@ -177,10 +168,13 @@ namespace Fanex.NAP.Core.SignIn
             var redirectUrl = Helper.GetAbsoluteRedirectUrl(Request, Url.Content(FormsAuthentication.DefaultUrl));
             var encodedRedirectUrl = HttpUtility.UrlEncode(redirectUrl);
 
-            var aspNetCoreAuthUrl = ConfigurationManager.AppSettings["NetCoreAuth"]
-                + $"/Login?username={username}&password={password}&loginToken={loginToken}&redirectUrl={encodedRedirectUrl}";
+            var redirectAuthUrl = PropagationAuthUrl
+                + $"/Login?username={username}"
+                + $"&password={password}"
+                + $"&loginToken={loginToken}"
+                + $"&redirectUrl={encodedRedirectUrl}";
 
-            return Redirect(aspNetCoreAuthUrl);
+            return Redirect(redirectAuthUrl);
         }
 
         #endregion sign in
@@ -244,11 +238,12 @@ namespace Fanex.NAP.Core.SignIn
 
         private void CreateUserMenu(User user)
         {
-            currentSession.MenuItemList = (IList<MenuItem>)userService.GetMenuItem(
+            currentSession.MenuItemList = userService.GetMenuItem(
                 user.Id,
                 NapSettings.Settings.SiteId,
                 NapSettings.Settings.Environment,
-                true);
+                true)
+                .ToList();
         }
 
         private void CreateAuthInfo(User user)
@@ -454,6 +449,20 @@ namespace Fanex.NAP.Core.SignIn
                 {
                     return reader.ReadToEnd();
                 }
+            }
+        }
+
+        private string PropagationAuthUrl
+        {
+            get
+            {
+                var legacyPropagationAuth = ConfigurationManager.AppSettings["NetCoreAuth"] ?? string.Empty;
+                var propagationAuth = ConfigurationManager.AppSettings["PropagationAuth"] ?? string.Empty;
+
+                propagationAuth = string.IsNullOrEmpty(propagationAuth) ? legacyPropagationAuth : propagationAuth;
+                propagationAuth = propagationAuth.Trim().TrimEnd('/');
+
+                return propagationAuth;
             }
         }
 

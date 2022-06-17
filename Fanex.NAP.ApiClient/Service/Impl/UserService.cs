@@ -93,5 +93,21 @@
 
             return userClient.GetPermissions(userId, siteId, parentFunctionKey, environment);
         }
+
+        public bool IgnoredOtp(int userId, string system)
+        {
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.IgnoredOtp(userId, system);
+        }
+
+        public bool VerifyOtp(int userId, string system, string otp)
+        {
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.VerifyOtp(userId, system, otp);
+        }
     }
 }
