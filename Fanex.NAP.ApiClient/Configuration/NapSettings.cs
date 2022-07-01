@@ -12,10 +12,11 @@
         private const string NAPEnableReCheckin = "EnableReCheckin";
         private const string NAPUnauthorizeUrl = "UnauthorizeUrl";
         private const string NAPServiceUrls = "ServiceUrls";
-        private const string NAPAccessKey = "AccessKey";
         private const string NAPDomain = "Domain";
         private const string NAPDomainAdd = "add";
         private const string NAPCacheDuration = "CacheDuration";
+        private const string NAPIsNapHub = "IsNapHub";
+        private const string NAPEnableOtp = "EnableOtp";
 
         private static NapSettings _settings = ConfigurationManager.GetSection(NAPSettings) as NapSettings;
 
@@ -27,23 +28,11 @@
             }
         }
 
-        public bool IsNapHub
-        {
-            get { return SiteId == 0; }
-        }
-
         public bool EnableDirectLogin
         {
             get
             {
-                var result = false;
-
-                if (!bool.TryParse(_EnableDirectLogin, out result))
-                {
-                    result = Equals(_EnableDirectLogin, "1");
-                }
-
-                return result;
+                return ToBoolean(_EnableDirectLogin);
             }
 
             set
@@ -56,14 +45,7 @@
         {
             get
             {
-                var result = false;
-
-                if (!bool.TryParse(_EnableReCheckIn, out result))
-                {
-                    result = Equals(_EnableReCheckIn, "1");
-                }
-
-                return result;
+                return ToBoolean(_EnableReCheckIn);
             }
 
             set
@@ -72,12 +54,51 @@
             }
         }
 
+
+        public bool IsNapHub
+        {
+            get
+            {
+                return ToBoolean(_IsNapHub);
+            }
+
+            set
+            {
+                _IsNapHub = value.ToString();
+            }
+        }
+
+        public bool EnableOtp
+        {
+            get
+            {
+                return ToBoolean(_EnableOtp);
+            }
+
+            set
+            {
+                _EnableOtp = value.ToString();
+            }
+        }
+
+        private bool ToBoolean(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+
+            value = value.ToLower();
+            return value == "true" || value == "1";
+        }
+
         [ConfigurationProperty(NAPSiteId, IsRequired = true)]
         public int SiteId
         {
             get { return (int)this[NAPSiteId]; }
             set { this[NAPSiteId] = value; }
         }
+
 
         [ConfigurationProperty(NAPHubUrl, IsRequired = true)]
         public string HubUrl
@@ -114,13 +135,6 @@
             set { this[NAPServiceUrls] = value; }
         }
 
-        [ConfigurationProperty(NAPAccessKey, IsRequired = true)]
-        public string AccessKey
-        {
-            get { return (string)this[NAPAccessKey]; }
-            set { this[NAPAccessKey] = value; }
-        }
-
         [ConfigurationProperty(NAPCacheDuration, IsRequired = false, DefaultValue = 0)]
         public int CacheDuration
         {
@@ -140,6 +154,20 @@
         {
             get { return (string)this[NAPEnableReCheckin]; }
             set { this[NAPEnableReCheckin] = value; }
+        }
+
+        [ConfigurationProperty(NAPIsNapHub, IsRequired = false)]
+        private string _IsNapHub
+        {
+            get { return (string)this[NAPIsNapHub]; }
+            set { this[NAPIsNapHub] = value; }
+        }
+
+        [ConfigurationProperty(NAPEnableOtp, IsRequired = false)]
+        private string _EnableOtp
+        {
+            get { return (string)this[NAPEnableOtp]; }
+            set { this[NAPEnableOtp] = value; }
         }
     }
 }

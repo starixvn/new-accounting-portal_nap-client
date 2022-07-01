@@ -2,11 +2,7 @@
 {
     using System;
     using System.Net.Http;
-    using System.Threading;
-    using System.Threading.Tasks;
-    using Fanex.NAP.Core.Clients;
-    using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Models.ParameterObject;
+    using Core.Clients;
     using NSubstitute;
     using NUnit.Framework;
 
@@ -25,19 +21,6 @@
             _respone.Content = Substitute.For<HttpContent>();
             _httpClient = HttpClientFactory.Create(new FakeDelegatingHandler(_respone));
             _client = new UserClient(new Uri(BaseEndpoint), _httpClient);
-        }
-
-        [Test]
-        public void HasAnyPermission_WhenCalled_RequestUri()
-        {
-            var userId = 1;
-            var siteId = 2;
-            var environment = "LIVE";
-
-            _client.HasAnyPermission(userId, siteId, environment);
-
-            var expectedRequestUri = "http://10.18.200.209:1710/api/user/1/functionPolicy?siteId=2&environment=LIVE";
-            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
 
         [Test]
@@ -85,27 +68,6 @@
             _client.Get(username);
 
             var expectedRequestUri = "http://10.18.200.209:1710/api/user?username=edward.nguyen";
-            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
-        }
-
-        [Test]
-        public void GetAll_WhenCalled_RequestUri()
-        {
-            _client.GetAll();
-
-            var expectedRequestUri = "http://10.18.200.209:1710/api/user/";
-            Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
-        }
-
-        [Test]
-        public void GetUserLevel_WhenCalled_RequestUri()
-        {
-            var userId = 1;
-            var siteId = 2;
-
-            _client.GetUserLevel(userId, siteId);
-
-            var expectedRequestUri = "http://10.18.200.209:1710/api/user/1/levelonsite/2";
             Assert.AreEqual(expectedRequestUri, _respone.RequestMessage.RequestUri.ToString());
         }
 

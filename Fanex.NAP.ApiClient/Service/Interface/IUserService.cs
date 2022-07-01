@@ -2,6 +2,8 @@
 {
     using System.Collections.Generic;
     using Business;
+using Fanex.Common.Helper;
+using Fanex.NAP.Core.Clients;
     using Models;
     using Models.ValueObject;
 
@@ -11,7 +13,7 @@
 
         User Get(string username);
 
-        IEnumerable<User> GetAll();
+        int GetUserLevel(int userId, int siteId);
 
         IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string environment = Constant.UAT, bool? isActive = null);
 
@@ -19,12 +21,12 @@
 
         IEnumerable<SiteLevel> GetSiteLevel(int userId, string environment = Constant.UAT);
 
-        int GetUserLevel(int userId, int siteId);
-
-        bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT);
-
         bool IsHavingPermission(int userId, int siteId, string functionKey, Constant.Policy policy);
 
         IEnumerable<FunctionPolicy> GetPermissions(int userId, int siteId, string parentFunctionKey, string environment = Constant.UAT);
+
+        bool IgnoredOtp(int userId, string system);
+
+        bool VerifyOtp(int userId, string system, string otp);
     }
 }

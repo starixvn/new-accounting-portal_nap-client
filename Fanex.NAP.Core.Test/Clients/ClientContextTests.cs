@@ -1,9 +1,9 @@
 ﻿namespace Fanex.NAP.Core.Test.Clients
 {
     using System.Linq;
-    using Fanex.NAP.Core.Clients;
+    using Core.Clients;
+    using Exceptions;
     using Fanex.NAP.Core.Configuration;
-    using Fanex.NAP.Core.Exceptions;
     using NUnit.Framework;
 
     [TestFixture]

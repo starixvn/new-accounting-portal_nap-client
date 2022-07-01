@@ -1,6 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Service.Interface
 {
-    using Fanex.NAP.Core.Models.ParameterObject;
+    using Models.ParameterObject;
 
     public interface ISecurityService
     {
@@ -15,7 +15,5 @@
         int SSOLogin(SSOLoginParameter parameter);
 
         bool UpdatePassword(int siteId, int userId, string password);
-
-        bool UpdateProfile(int siteId, UpdateUserInfoParameter parameter);
     }
 }

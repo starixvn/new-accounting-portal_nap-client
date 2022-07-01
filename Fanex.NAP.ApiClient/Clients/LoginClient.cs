@@ -1,8 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Fanex.NAP.Core.Models.ParameterObject;
     using System;
     using System.Net.Http;
+    using Models.ParameterObject;
 
     internal class LoginClient : BaseClient
     {
@@ -13,12 +13,12 @@
 
         public int Login(LoginParameter parameter)
         {
-            return Send<LoginParameter, int>(CreateRequestUri(RelativePaths.Login), HttpMethod.Post, parameter);
+            return Post<LoginParameter, int>(CreateRequestUri(RelativePaths.Login), parameter);
         }
 
         private class RelativePaths
         {
-            public const string Login = "/login/";
+            public const string Login = "login";
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Web.Session
 {
-    using Fanex.NAP.Core.Models;
     using System.Collections.Generic;
+    using Fanex.NAP.Core.Models;
 
     public interface ICurrentSession
     {

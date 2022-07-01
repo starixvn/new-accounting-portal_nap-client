@@ -17,7 +17,7 @@
 
         private class RelativePaths
         {
-            public const string ReCheckIn = "/recheckin/";
+            public const string ReCheckIn = "recheckin";
         }
     }
 }

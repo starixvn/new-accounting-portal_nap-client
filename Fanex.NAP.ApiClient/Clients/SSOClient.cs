@@ -1,8 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Fanex.NAP.Core.Models.ParameterObject;
     using System;
     using System.Net.Http;
+    using Models.ParameterObject;
 
     internal class SSOClient : BaseClient
     {
@@ -18,13 +18,13 @@
 
         public int Login(SSOLoginParameter parameter)
         {
-            return Send<SSOLoginParameter, int>(CreateRequestUri(RelativePaths.Login), HttpMethod.Post, parameter);
+            return Post<SSOLoginParameter, int>(CreateRequestUri(RelativePaths.Login),  parameter);
         }
 
         private class RelativePaths
         {
-            public const string GetTime = "/ssologin/";
-            public const string Login = "/ssologin/";
+            public const string GetTime = "ssologin";
+            public const string Login = "ssologin";
         }
     }
 }

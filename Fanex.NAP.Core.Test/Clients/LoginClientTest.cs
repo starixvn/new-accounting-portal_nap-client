@@ -1,11 +1,11 @@
 ﻿namespace Fanex.NAP.Core.Test.Clients
 {
-    using Fanex.NAP.Core.Clients;
-    using Fanex.NAP.Core.Models.ParameterObject;
-    using NSubstitute;
-    using NUnit.Framework;
     using System;
     using System.Net.Http;
+    using Core.Clients;
+    using Models.ParameterObject;
+    using NSubstitute;
+    using NUnit.Framework;
 
     [TestFixture]
     public class LoginClientTest

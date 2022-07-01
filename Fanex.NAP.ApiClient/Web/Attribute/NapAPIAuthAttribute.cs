@@ -85,7 +85,7 @@
 
             if (PermissionCache)
             {
-                var cacheKey = string.Format("{0}_{1}_{2}_{3}", NapSettings.Settings.AccessKey, userId, NapSettings.Settings.SiteId, this.FunctionKey);
+                var cacheKey = string.Format("{0}_{1}_{2}", userId, NapSettings.Settings.SiteId, this.FunctionKey);
                 var cachedPolicy = Cache.Get(cacheKey);
 
                 if (cachedPolicy == null)

@@ -1,10 +1,10 @@
 ﻿namespace Fanex.NAP.Core.Test.Clients
 {
-    using Fanex.NAP.Core.Clients;
-    using NSubstitute;
-    using NUnit.Framework;
     using System;
     using System.Net.Http;
+    using Core.Clients;
+    using NSubstitute;
+    using NUnit.Framework;
 
     [TestFixture]
     public class LogoutClientTest

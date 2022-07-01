@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -9,31 +7,36 @@ using System.Web.Mvc;
 using System.Web.Security;
 using Fanex.NAP.Core.Configuration;
 using Fanex.NAP.Core.Context;
-using Fanex.NAP.Core.Models;
-using Fanex.NAP.Core.Models.ParameterObject;
-using Fanex.NAP.Core.Models.ValueObject;
 using Fanex.NAP.Core.Service.Impl;
 using Fanex.NAP.Core.SignIn.Models;
 using Fanex.NAP.Core.SignIn.ViewModel;
-using Fanex.NAP.Core.Web;
 using Fanex.NAP.Core.Web.Auth;
 using Fanex.NAP.Core.Web.Session;
-using ONEbook.UM.Services.Impl;
+using ONEbook.UM;
+using ONEbook.UM.Services;
 
 namespace Fanex.NAP.Core.SignIn
 {
+    using Core.Models;
+    using Core.Models.ParameterObject;
+    using Fanex.Common;
+    using Fanex.NAP.Core.Service.Interface;
+    using Web;
+
+    [AllowAnonymous]
     public class AuthController : Controller
     {
         #region members
 
         private const string FormTokenName = "__SecureFormToken";
+        private const string OtpSite = "NAP";
         private readonly CurrentSession currentSession;
         private readonly SecurityService securityService;
         private readonly GroupService groupService;
-        private readonly SiteService siteService;
         private readonly UserService userService;
         private readonly CurrentContext currentContext;
-        private readonly MaintenanceService maintenanceService;
+        private readonly IMaintenanceService maintenanceService;
+        private readonly SSOService ssoService;
 
         #endregion members
 
@@ -43,18 +46,18 @@ namespace Fanex.NAP.Core.SignIn
         {
             userService = new UserService();
             groupService = new GroupService();
-            siteService = new SiteService();
             currentSession = new CurrentSession();
             currentContext = new CurrentContext();
             securityService = new SecurityService();
-            maintenanceService = new MaintenanceService();
+            ssoService = new SSOServiceImp();
+            maintenanceService = new MaintenanceService(UMClientManager.RestClient, UMClientManager.CacheService, UMClientManager.UMClientConfigs, UMClientManager.HttpContext);
         }
 
         #endregion ctors
 
         #region sign in
 
-        public string FormToken
+        private string FormToken
         {
             get
             {
@@ -72,96 +75,135 @@ namespace Fanex.NAP.Core.SignIn
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult Index()
         {
-            GenerateNewToken();
-
-            var indexViewModel = new IndexViewModel();
-            indexViewModel.FormToken = FormToken;
-
-            if (!NapSettings.Settings.IsNapHub && !NapSettings.Settings.EnableDirectLogin)
+            if (!NapSettings.Settings.EnableDirectLogin)
             {
-                // if login-directly feature is disabled then redirect users to NAP Hub
                 return Redirect(NapSettings.Settings.HubUrl);
             }
 
-            return View("Fanex.NAP.Core.SignIn.Views.Index", indexViewModel);
+            Session["OtpUserId"] = 0;
+            GenerateNewToken();
+            var indexViewModel = new IndexViewModel { FormToken = FormToken };
+            return View("Index", indexViewModel);
         }
 
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
         [HttpPost]
         public ActionResult Index(string username, string password, string loginToken)
         {
-            var indexViewModel = new IndexViewModel();
+            return NapSettings.Settings.IsNapHub
+                ? IndexNapHub(username, password, loginToken)
+                : IndexForSitesOtherThanNapHub(username, password, loginToken);
+        }
 
-            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+
+        private ActionResult IndexNapHub(string username, string password, string loginToken)
+        {
+            var indexViewModel = new IndexViewModel();
+            if (IsValidUserPassword(username, password, loginToken))
             {
                 var user = userService.Get(username.Trim());
-                if (user != null && CheckValidToken(loginToken))
+                return LoginFlow(user);
+            }
+            else
+            {
+                indexViewModel.Message = ViewResources.Invalid_Username_or_Password;
+            }
+
+            GenerateNewToken();
+            indexViewModel.FormToken = FormToken;
+
+            return View("Index", indexViewModel);
+        }
+
+        public ActionResult IndexForSitesOtherThanNapHub(string username, string password, string loginToken)
+        {
+            var indexViewModel = new IndexViewModel();
+
+            if (IsValidUserPassword(username, password, loginToken))
+            {
+                var user = userService.Get(username.Trim());
+
+                if (IsAuthorizedUser(user))
                 {
-                    string hashPassword = SHA256(user.Password + loginToken);
-                    if (password == hashPassword)
+                    if (IsActivatedUser(user))
                     {
-                        ClearToken();
-                        var group = user.Group == null ? null : groupService.Get(user.Group.Id);
-
-                        var siteLevelList = userService.GetSiteLevel(user.Id, NapSettings.Settings.Environment);
-
-                        if ((group == null || group.IsActive) &&
-                            siteLevelList.Any(x => x.IsActive))
-                        {
-                            var criteria = SetUserCheckInCriteria(user.Id);
-                            var onUserId = securityService.Login(criteria);
-
-
-                            SaveUserSession(user, username, onUserId);
-
-                            if (currentSession.MenuItemList != null &&
-                                currentSession.MenuItemList.Where(m => m.Parent == null).ToList().Count > 0)
-                            {
-                                if (UserIsActiveOnThisSite(siteLevelList))
-                                {
-                                    return Redirect(FormsAuthentication.DefaultUrl);
-                                }
-                                else
-                                {
-                                    DoSignOut();
-                                    indexViewModel.Message = ViewResources.Your_account_was_suspended;
-                                }
-                            }
-                            else
-                            {
-                                DoSignOut();
-                                indexViewModel.Message = "You have no permission on any Menu";
-                            }
-                        }
-                        else
-                        {
-                            indexViewModel.Message = siteLevelList.Any() ? ViewResources.Your_account_was_suspended : ViewResources.You_have_no_authorization;
-                        }
+                        return LoginFlow(user);
                     }
                     else
                     {
-                        indexViewModel.Message = ViewResources.Invalid_Username_or_Password;
+                        indexViewModel.Message = ViewResources.Your_account_was_suspended;
                     }
                 }
                 else
                 {
-                    indexViewModel.Message = ViewResources.Invalid_Username_or_Password;
+                    indexViewModel.Message = ViewResources.You_have_no_authorization;
                 }
             }
             else
             {
-                indexViewModel.Message = "Invalid input!";
+                indexViewModel.Message = ViewResources.Invalid_Username_or_Password;
             }
 
             GenerateNewToken();
             indexViewModel.FormToken = FormToken;
 
-            return View("Fanex.NAP.Core.SignIn.Views.Index", indexViewModel);
+            return View("Index", indexViewModel);
+        }
+
+        private bool IsValidUserPassword(string username, string password, string token)
+        {
+            if (!IsValidToken(token)
+                || string.IsNullOrEmpty(username)
+                || string.IsNullOrEmpty(password))
+            {
+                return false;
+            }
+
+            var user = userService.Get(username.Trim());
+
+            if (user == null || user.Id == 0)
+            {
+                return false;
+            }
+
+            string hashPassword = SHA256(user.Password + token);
+            if (password != hashPassword)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+
+        private bool IsAuthorizedUser(User user)
+        {
+            var group = user.GroupId == 0 ? null : groupService.Get(user.GroupId);
+
+            var siteLevelList = userService.GetSiteLevel(user.Id, NapSettings.Settings.Environment);
+
+            return (group == null || group.IsActive) &&
+                 siteLevelList.Any(x => x.IsActive);
+        }
+
+        private bool IsActivatedUser(User user)
+        {
+            var siteLevelList = userService.GetSiteLevel(user.Id, NapSettings.Settings.Environment);
+
+            bool userIsActiveOnThisSite = false;
+
+            foreach (var siteLevel in siteLevelList)
+            {
+                if (siteLevel.SiteId == NapSettings.Settings.SiteId && siteLevel.IsActive)
+                {
+                    userIsActiveOnThisSite = true;
+                }
+            }
+
+            return userIsActiveOnThisSite;
         }
 
         #endregion sign in
@@ -173,14 +215,26 @@ namespace Fanex.NAP.Core.SignIn
         {
             DoSignOut();
 
-            return Redirect(FormsAuthentication.LoginUrl);
+            if (string.IsNullOrEmpty(PropagationAuthUrl))
+            {
+                return Redirect(FormsAuthentication.LoginUrl);
+            }
+
+            var homeUrl = Helper.HomeUrl;
+            var encodedRedirectUrl = HttpUtility.UrlEncode(homeUrl);
+            var parameters = $"?redirectUrl={encodedRedirectUrl}";
+
+            var propagationAuthUrl = PropagationAuthUrl.Replace("/SSO", "/LogOut") + parameters;
+
+
+
+            return Redirect(propagationAuthUrl);
         }
 
         #endregion sign out
 
         #region re check in
 
-        [AllowAnonymous]
         public ActionResult ReCheckIn()
         {
             if (!NapSettings.Settings.EnableReCheckIn)
@@ -217,11 +271,12 @@ namespace Fanex.NAP.Core.SignIn
 
         private void CreateUserMenu(User user)
         {
-            currentSession.MenuItemList = (IList<MenuItem>)userService.GetMenuItem(
+            currentSession.MenuItemList = userService.GetMenuItem(
                 user.Id,
                 NapSettings.Settings.SiteId,
                 NapSettings.Settings.Environment,
-                true);
+                true)
+                .ToList();
         }
 
         private void CreateAuthInfo(User user)
@@ -279,20 +334,24 @@ namespace Fanex.NAP.Core.SignIn
             CreateAuthInfo(user);
         }
 
-        private bool UserIsActiveOnThisSite(IEnumerable<SiteLevel> siteLevelList)
-        {
-            bool userIsActiveOnThisSite = false;
 
-            foreach (var siteLevel in siteLevelList)
+        private string SHA256(string input)
+        {
+            if (string.IsNullOrWhiteSpace(input))
             {
-                if (siteLevel.Site.Id == NapSettings.Settings.SiteId && siteLevel.IsActive)
-                {
-                    userIsActiveOnThisSite = true;
-                }
+                throw new ArgumentException("Hey guy! I dont want to hash an empty or white space string");
             }
 
-            return userIsActiveOnThisSite;
+            var hashAlgorithm = new SHA256Managed();
+            var hashData = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
+            string encrypted = BitConverter.ToString(hashData).Replace("-", string.Empty).ToLower();
+
+            return encrypted;
         }
+
+        #endregion helpers
+
+        #region Token
 
         private void AddTokenToCookie(string loginToken)
         {
@@ -311,7 +370,7 @@ namespace Fanex.NAP.Core.SignIn
             Response.Cookies.Set(responseCookie);
         }
 
-        private bool CheckValidToken(string loginToken)
+        private bool IsValidToken(string loginToken)
         {
             return !string.IsNullOrWhiteSpace(loginToken)
                 && FormToken == loginToken
@@ -321,41 +380,16 @@ namespace Fanex.NAP.Core.SignIn
 
         private void GenerateNewToken()
         {
-            string loginToken = Guid.NewGuid().ToString("N");
+            // var loginToken = Guid.NewGuid().ToString("N");
+            var loginToken = "26405e7fa3ea4ee7a1912ac014de4c54";
             FormToken = loginToken;
             AddTokenToCookie(loginToken);
         }
 
-        private string SHA256(string input)
-        {
-            if (string.IsNullOrWhiteSpace(input))
-            {
-                throw new ArgumentException("Hey guy! I dont want to hash an empty or white space string");
-            }
-
-            var hashAlgorithm = new SHA256Managed();
-            var hashData = hashAlgorithm.ComputeHash(Encoding.UTF8.GetBytes(input));
-            string encrypted = BitConverter.ToString(hashData).Replace("-", string.Empty).ToLower();
-
-            return encrypted;
-        }
-
-        private void ClearToken()
-        {
-            Session.Remove(FormTokenName);
-
-            if (Request.Cookies[FormTokenName] != null)
-            {
-                var cookie = new HttpCookie(FormTokenName) { Expires = DateTime.Now.AddDays(-1d) };
-                Response.Cookies.Add(cookie);
-            }
-        }
-
-        #endregion helpers
+        #endregion
 
         #region common
 
-        [AllowAnonymous]
         public ActionResult Offline()
         {
             var isDownTime = maintenanceService.IsUnderMaintenance();
@@ -368,40 +402,19 @@ namespace Fanex.NAP.Core.SignIn
 
             var viewModel = new MaintenanceViewModel { UmtFrom = downTime.From, UmtTo = downTime.To };
 
-            return View("Fanex.NAP.Core.SignIn.Views.Offline", viewModel);
+            return View("Offline", viewModel);
         }
 
-        [AllowAnonymous]
         public ActionResult AccessDenied()
         {
-            return View("Fanex.NAP.Core.SignIn.Views.AccessDenied");
+            return View("AccessDenied");
         }
 
-        [AllowAnonymous]
         public ActionResult Error()
         {
-            return View("Fanex.NAP.Core.SignIn.Views.Error");
+            return View("Error");
         }
 
-        [AllowAnonymous]
-        public ActionResult Static(string url)
-        {
-            var contentType = "application/octet-stream";
-            if (url.EndsWith("css"))
-            {
-                contentType = "text/css";
-            }
-            else if (url.EndsWith("js"))
-            {
-                contentType = "text/javascript";
-            }
-
-            var resourceName = $"Fanex.NAP.Core.SignIn.Resources.{url}";
-            var text = ReadResourceContent(resourceName);
-            return Content(text, contentType);
-        }
-
-        [AllowAnonymous]
         public ActionResult RecheckinScript()
         {
             if (!NapSettings.Settings.EnableReCheckIn)
@@ -409,26 +422,13 @@ namespace Fanex.NAP.Core.SignIn
                 return Content(string.Empty, "text/javascript");
             }
 
-            var resourceName = $"Fanex.NAP.Core.SignIn.Resources.recheckin.js";
-            var text = ReadResourceContent(resourceName);
+            var text = Helper.ReCheckInScript;
             var rootUrl = Url.Content("~/");
 
             return Content($"window.rootUrl='{rootUrl}';\r\n{text}", "text/javascript");
         }
 
-
-        private string ReadResourceContent(string resourceName)
-        {
-            var assembly = typeof(AuthController).Assembly;
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
-        }
+        private string PropagationAuthUrl => Helper.PropagationAuthUrl;
 
         #endregion
 
@@ -438,7 +438,7 @@ namespace Fanex.NAP.Core.SignIn
         [Authorize]
         public ActionResult ChangePassword()
         {
-            return View("Fanex.NAP.Core.SignIn.Views.ChangePassword", new UpdatePasswordModel());
+            return View("ChangePassword", new UpdatePasswordModel());
         }
 
         [HttpPost]
@@ -464,10 +464,146 @@ namespace Fanex.NAP.Core.SignIn
 
         #endregion
 
-        [AllowAnonymous]
         public ActionResult WhoAmI()
         {
             return Content("OK");
         }
+
+        #region LoginFlow
+
+        private ActionResult LoginFlow(User user)
+        {
+            var ignoredOtp = !NapSettings.Settings.EnableOtp || userService.IgnoredOtp(user.Id, OtpSite);
+
+            if (ignoredOtp)
+            {
+                return DefaultLoginFlow(user);
+            }
+            else
+            {
+                Session["OtpUserId"] = user.Id;
+                return RedirectToAction("OtpLoginFlow");
+            }
+        }
+
+        private ActionResult DefaultLoginFlow(User user)
+        {
+            var criteria = SetUserCheckInCriteria(user.Id);
+            var onUserId = securityService.Login(criteria);
+
+
+            SaveUserSession(user, user.Username, onUserId);
+
+            if (!string.IsNullOrEmpty(PropagationAuthUrl))
+            {
+                return RedirectToPropagationAuth(user.Id, onUserId);
+            }
+            else
+            {
+                return Redirect(FormsAuthentication.DefaultUrl);
+            }
+        }
+
+        [HttpGet]
+        public ActionResult OtpLoginFlow()
+        {
+            var userId = Session["OtpUserId"] == null ? 0 : (int)Session["OtpUserId"];
+            if (userId == 0)
+            {
+                return Redirect(FormsAuthentication.LoginUrl);
+            }
+
+            var ignoredOtp = !NapSettings.Settings.EnableOtp || userService.IgnoredOtp(userId, OtpSite);
+
+            if (ignoredOtp)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult OtpLoginFlow(string otp)
+        {
+            ViewBag.Message = string.Empty;
+            var userId = Session["OtpUserId"] == null ? 0 : (int)Session["OtpUserId"];
+            var ignoredOtp = !NapSettings.Settings.EnableOtp || userService.IgnoredOtp(userId, OtpSite);
+            if (userId == 0 || ignoredOtp)
+            {
+                Session["OtpUserId"] = 0;
+                return RedirectToAction("Index");
+            }
+
+            var validOtp = !string.IsNullOrEmpty(otp) && userService.VerifyOtp(userId, OtpSite, otp);
+
+            if (validOtp)
+            {
+                Session["OtpUserId"] = 0;
+                var user = userService.Get(userId);
+                return DefaultLoginFlow(user);
+            }
+
+            ViewBag.Message = "Invalid OTP. Please try again";
+
+            return View();
+        }
+
+        #endregion
+
+        #region SSO
+
+        [HttpGet]
+        public ActionResult SSO(string userId, string onuserId, string time, string redirectUrl = "")
+        {
+            if (ssoService.IsAuthenticated(userId, onuserId, time, this))
+            {
+                if (string.IsNullOrEmpty(PropagationAuthUrl))
+                {
+                    return RedirectToRedirectUrl(redirectUrl);
+                }
+                else
+                {
+                    return RedirectToPrapagationAuth(userId, onuserId, time, redirectUrl);
+                }
+            }
+
+            return Redirect(FormsAuthentication.LoginUrl);
+        }
+
+        private ActionResult RedirectToRedirectUrl(string redirectUrl)
+        {
+            var forwardLink = string.IsNullOrEmpty(redirectUrl) ? FormsAuthentication.DefaultUrl : redirectUrl.ToString();
+            return Redirect(forwardLink);
+        }
+
+
+        private ActionResult RedirectToPropagationAuth(int userId, int onUserId)
+        {
+            var time = securityService.GetTime();
+            var homeUrl = Helper.HomeUrl;
+            var encodedRedirectUrl = HttpUtility.UrlEncode(homeUrl);
+            var parameters = $"?userId={Cryptography.CfsEnCrypt(userId.ToString())}"
+                + $"&onuserId={Cryptography.CfsEnCrypt(onUserId.ToString())}"
+                + $"&time={Cryptography.CfsEnCrypt(time.ToString())}"
+                + $"&redirectUrl={encodedRedirectUrl}";
+
+            var redirectAuthUrl = PropagationAuthUrl + parameters;
+
+            return Redirect(redirectAuthUrl);
+        }
+
+
+        private ActionResult RedirectToPrapagationAuth(string userId, string onuserId, string time, string redirectUrl)
+        {
+            var absoluteRedirectUrl = Helper.GetAbsoluteUrl(redirectUrl);
+            var encodedRedirectUrl = HttpUtility.UrlEncode(absoluteRedirectUrl);
+
+            var parameters = $"?userId={userId}&onuserId={onuserId}&time={time}&redirectUrl={encodedRedirectUrl}";
+            var propagationAuthUrl = PropagationAuthUrl + parameters;
+            return Redirect(propagationAuthUrl);
+        }
+
+        #endregion
     }
 }

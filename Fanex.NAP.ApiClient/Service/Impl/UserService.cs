@@ -1,6 +1,5 @@
 ﻿namespace Fanex.NAP.Core.Service.Impl
 {
-    using System;
     using System.Collections.Generic;
     using Business;
     using Clients;
@@ -12,72 +11,57 @@
 
     public class UserService : IUserService
     {
-        public bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT)
-        {
-            Check.Argument.IsNotNegativeOrZero(userId, "userId");
-            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            Check.Argument.IsNotEmpty(environment, "environment");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.HasAnyPermission(userId, siteId, environment);
-            }
-        }
-
         public IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string environment = Constant.UAT, bool? isActive = null)
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
             Check.Argument.IsNotEmpty(environment, "environment");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetMenuItem(userId, siteId, environment, isActive);
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.GetMenuItem(userId, siteId, environment, isActive);
+
         }
 
         public IEnumerable<SiteLevel> GetSiteLevel(int userId, string environment = Constant.UAT)
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotEmpty(environment, "environment");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetSiteLevel(userId, environment);
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.GetSiteLevel(userId, environment);
+
         }
 
         public User Get(int userId)
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.Get(userId);
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.Get(userId);
         }
 
         public User Get(string username)
         {
             Check.Argument.IsNotEmpty(username, "username");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
+            var userClient = ClientContext.Clients.CreateUserClient();
             {
                 return userClient.Get(username);
             }
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetByFunctionAndSite(string functionKey, int siteId)
         {
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetAll();
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.GetByFunctionAndSite(functionKey, siteId);
         }
 
         public int GetUserLevel(int userId, int siteId)
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetUserLevel(userId, siteId);
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+            return userClient.GetUserLevel(userId, siteId);
         }
 
         public int GetPermission(int userId, int siteId, string functionKey)
@@ -85,10 +69,9 @@
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
             Check.Argument.IsNotEmpty(functionKey, "functionKey");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetPermission(userId, siteId, functionKey);
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.GetPermission(userId, siteId, functionKey);
         }
 
         public bool IsHavingPermission(int userId, int siteId, string functionKey, Constant.Policy policy)
@@ -106,20 +89,25 @@
         {
             Check.Argument.IsNotNegativeOrZero(userId, "userId");
             Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetPermissions(userId, siteId, parentFunctionKey, environment);
-            }
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.GetPermissions(userId, siteId, parentFunctionKey, environment);
         }
 
-        public IEnumerable<UserPolicy> GetUserPolicies(string functionKey, int siteId)
+        public bool IgnoredOtp(int userId, string system)
         {
-            Check.Argument.IsNotEmpty(functionKey, "functionKey");
-            Check.Argument.IsNotNegativeOrZero(siteId, "siteId");
-            using (var userClient = ClientContext.Clients.CreateUserClient())
-            {
-                return userClient.GetUserPolicies(functionKey, siteId);
-            }
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.IgnoredOtp(userId, system);
+        }
+
+        public bool VerifyOtp(int userId, string system, string otp)
+        {
+            Check.Argument.IsNotNegativeOrZero(userId, "userId");
+            var userClient = ClientContext.Clients.CreateUserClient();
+
+            return userClient.VerifyOtp(userId, system, otp);
         }
     }
 }

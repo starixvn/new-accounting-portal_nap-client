@@ -16,7 +16,7 @@
 
     public class SSOServiceImp : SSOService
     {
-        private const int TimeExipration = 30;
+        private const int TimeExipration = 60;
         private readonly ISecurityService securityService;
         private readonly ICurrentSession currentSession;
         private readonly IUserService userService;

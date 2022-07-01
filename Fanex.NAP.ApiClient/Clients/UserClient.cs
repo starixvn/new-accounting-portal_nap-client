@@ -1,22 +1,17 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Fanex.NAP.Core.Business;
-    using Fanex.NAP.Core.Models;
-    using Fanex.NAP.Core.Models.ValueObject;
     using System;
     using System.Collections.Generic;
     using System.Net.Http;
+    using Business;
+    using Models;
+    using Models.ValueObject;
 
     internal class UserClient : BaseClient
     {
         public UserClient(Uri baseEndpoint, HttpClient httpClient)
             : base(baseEndpoint, httpClient)
         {
-        }
-
-        public bool HasAnyPermission(int userId, int siteId, string environment = Constant.UAT)
-        {
-            return Get<bool>(CreateRequestUri(string.Format(RelativePaths.HasAnyPermission, userId), new { siteId, environment }));
         }
 
         public IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string env = Constant.UAT, bool? isActive = null)
@@ -41,9 +36,9 @@
             return Get<User>(CreateRequestUri(RelativePaths.GetByUsername, new { username }));
         }
 
-        public IEnumerable<User> GetAll()
+        public IEnumerable<User> GetByFunctionAndSite(string functionKey, int siteId)
         {
-            return Get<IEnumerable<User>>(CreateRequestUri(RelativePaths.GetAll));
+            return Get<IEnumerable<User>>(CreateRequestUri(RelativePaths.GetByFunctionAndSite, new { functionKey, siteId }));
         }
 
         public int GetUserLevel(int userId, int siteId)
@@ -61,21 +56,30 @@
                 CreateRequestUri(string.Format(RelativePaths.GetPermissions, userId),
                 new { siteId, parentFunctionKey, environment }));
 
-        public IEnumerable<UserPolicy> GetUserPolicies(string functionKey, int siteId)
-            => Get<IEnumerable<UserPolicy>>(CreateRequestUri(RelativePaths.GetUserPolicies, new { functionKey, siteId }));
+        public bool IgnoredOtp(int userId, string system)
+        {
+            var path = string.Format(RelativePaths.IgnoredOtp, userId);
+            return Get<bool>(CreateRequestUri(path, new { system }));
+        }
+
+        public bool VerifyOtp(int userId, string system, string otp)
+        {
+            var path = string.Format(RelativePaths.VerifyOtp, userId);
+            return Get<bool>(CreateRequestUri(path, new { system, otp }));
+        }
 
         private static class RelativePaths
         {
-            public const string HasAnyPermission = "/user/{0}/functionPolicy";
-            public const string GetMenuItem = "/user/{0}/menuItem";
-            public const string GetSiteLevel = "/user/{0}/sitelevel";
-            public const string GetById = "/user/{0}";
-            public const string GetByUsername = "/user";
-            public const string GetAll = "/user/";
-            public const string GetUserLevel = "/user/{0}/levelonsite/{1}";
-            public const string GetPermission = "/user/{0}/sitepolicy";
-            public const string GetPermissions = "/user/{0}/functionPolicies";
-            public const string GetUserPolicies = "/user/userPolicies";
+            public const string GetById = "user/{0}";
+            public const string GetByUsername = "user";
+            public const string GetByFunctionAndSite = "user/byfunctionandsite";
+            public const string GetPermission = "user/{0}/permission";
+            public const string GetPermissions = "user/{0}/permissions";
+            public const string GetMenuItem = "user/{0}/menuItem";
+            public const string GetSiteLevel = "user/{0}/sitelevel";
+            public const string GetUserLevel = "user/{0}/levelonsite/{1}";
+            public const string IgnoredOtp = "user/{0}/ignored-otp";
+            public const string VerifyOtp = "user/{0}/verify-otp";
         }
     }
 }

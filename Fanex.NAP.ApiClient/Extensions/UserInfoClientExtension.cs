@@ -1,7 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Extensions
 {
-    using Fanex.NAP.Core.Clients;
     using System;
+    using Clients;
 
     internal static class UserInfoClientExtension
     {

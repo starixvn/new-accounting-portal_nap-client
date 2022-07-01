@@ -1,8 +1,8 @@
 ﻿namespace Fanex.NAP.Core.Clients
 {
-    using Fanex.NAP.Core.Models;
     using System;
     using System.Net.Http;
+    using Models;
 
     internal class GroupClient : BaseClient
     {
@@ -18,7 +18,7 @@
 
         private class RelativePaths
         {
-            public const string Get = "/group/{0}";
+            public const string Get = "group/{0}";
         }
     }
 }

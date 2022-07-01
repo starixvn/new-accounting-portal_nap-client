@@ -1,6 +1,6 @@
 ﻿namespace Fanex.NAP.Core.Service.Interface
 {
-    using Fanex.NAP.Core.Models;
+    using Models;
 
     public interface IGroupService
     {

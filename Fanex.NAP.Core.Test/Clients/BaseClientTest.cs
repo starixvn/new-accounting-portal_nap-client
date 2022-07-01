@@ -4,8 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Net.Http;
-    using Fanex.NAP.Core.Clients;
-    using Fanex.NAP.Core.Configuration;
+    using Core.Clients;
     using NSubstitute;
     using NUnit.Framework;
 
