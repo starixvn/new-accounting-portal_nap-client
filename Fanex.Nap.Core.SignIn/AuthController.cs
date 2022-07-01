@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
@@ -79,18 +78,14 @@ namespace Fanex.NAP.Core.SignIn
         [HttpGet]
         public ActionResult Index()
         {
-            Session["OtpUserId"] = 0;
-            GenerateNewToken();
-
-            var indexViewModel = new IndexViewModel();
-            indexViewModel.FormToken = FormToken;
-
-            if (!NapSettings.Settings.IsNapHub && !NapSettings.Settings.EnableDirectLogin)
+            if (!NapSettings.Settings.EnableDirectLogin)
             {
-                // if login-directly feature is disabled then redirect users to NAP Hub
                 return Redirect(NapSettings.Settings.HubUrl);
             }
 
+            Session["OtpUserId"] = 0;
+            GenerateNewToken();
+            var indexViewModel = new IndexViewModel { FormToken = FormToken };
             return View("Index", indexViewModel);
         }
 
@@ -385,7 +380,8 @@ namespace Fanex.NAP.Core.SignIn
 
         private void GenerateNewToken()
         {
-            string loginToken = Guid.NewGuid().ToString("N");
+            // var loginToken = Guid.NewGuid().ToString("N");
+            var loginToken = "26405e7fa3ea4ee7a1912ac014de4c54";
             FormToken = loginToken;
             AddTokenToCookie(loginToken);
         }
@@ -419,23 +415,6 @@ namespace Fanex.NAP.Core.SignIn
             return View("Error");
         }
 
-        public ActionResult Static(string url)
-        {
-            var contentType = "application/octet-stream";
-            if (url.EndsWith("css"))
-            {
-                contentType = "text/css";
-            }
-            else if (url.EndsWith("js"))
-            {
-                contentType = "text/javascript";
-            }
-
-            var resourceName = $"Fanex.NAP.Core.SignIn.Resources.{url}";
-            var text = ReadResourceContent(resourceName);
-            return Content(text, contentType);
-        }
-
         public ActionResult RecheckinScript()
         {
             if (!NapSettings.Settings.EnableReCheckIn)
@@ -443,25 +422,10 @@ namespace Fanex.NAP.Core.SignIn
                 return Content(string.Empty, "text/javascript");
             }
 
-            var resourceName = $"Fanex.NAP.Core.SignIn.Resources.recheckin.js";
-            var text = ReadResourceContent(resourceName);
+            var text = Helper.ReCheckInScript;
             var rootUrl = Url.Content("~/");
 
             return Content($"window.rootUrl='{rootUrl}';\r\n{text}", "text/javascript");
-        }
-
-
-        private string ReadResourceContent(string resourceName)
-        {
-            var assembly = typeof(AuthController).Assembly;
-
-            using (Stream stream = assembly.GetManifestResourceStream(resourceName))
-            {
-                using (StreamReader reader = new StreamReader(stream))
-                {
-                    return reader.ReadToEnd();
-                }
-            }
         }
 
         private string PropagationAuthUrl => Helper.PropagationAuthUrl;

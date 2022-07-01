@@ -113,33 +113,33 @@
     <None Include="Views\OtpLoginFlow.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\cryptojs.js" />
-    <EmbeddedResource Include="Resources\jquery-1.8.0.min.js" />
+    <Content Include="wwwroot\nap-auth\cryptojs.js" />
+    <Content Include="wwwroot\nap-auth\jquery-1.8.0.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\error.css" />
+    <Content Include="wwwroot\nap-auth\error.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\accessdenied.css" />
+    <Content Include="wwwroot\nap-auth\accessdenied.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\changepassword.css" />
+    <Content Include="wwwroot\nap-auth\changepassword.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\jquery.validate.min.js" />
-    <EmbeddedResource Include="Resources\jquery.validate.unobtrusive.min.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validate.min.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validate.unobtrusive.min.js" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\jquery.validationEngine-en.js" />
-    <EmbeddedResource Include="Resources\jquery.validationEngine.js" />
-    <EmbeddedResource Include="Resources\validationEngine.jquery.css" />
+    <Content Include="wwwroot\nap-auth\jquery.validationEngine-en.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validationEngine.js" />
+    <Content Include="wwwroot\nap-auth\validationEngine.jquery.css" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="LoginResources\otp.css" />
-    <Content Include="LoginResources\auth.css" />
+    <Content Include="wwwroot\nap-auth\otp.css" />
+    <Content Include="wwwroot\nap-auth\auth-sample.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Resources\recheckin.js" />
+    <Content Include="wwwroot\nap-auth\recheckin.js" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Fanex.NAP.ApiClient\Fanex.NAP.Core.Client.csproj">

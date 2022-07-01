@@ -210,21 +210,32 @@
       <DependentUpon>Web.config</DependentUpon>
     </Content>
     <Content Include="Views\Web.config" />
+    <Content Include="wwwroot\nap-auth\AccessDenied.css" />
     <Content Include="wwwroot\nap-auth\auth-sample.css" />
+    <Content Include="wwwroot\nap-auth\changepassword.css" />
+    <Content Include="wwwroot\nap-auth\cryptojs.js" />
+    <Content Include="wwwroot\nap-auth\error.css" />
+    <Content Include="wwwroot\nap-auth\jquery-1.8.0.min.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validate.min.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validate.unobtrusive.min.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validationEngine-en.js" />
+    <Content Include="wwwroot\nap-auth\jquery.validationEngine.js" />
     <Content Include="wwwroot\nap-auth\otp.css" />
     <Content Include="wwwroot\nap-auth\auth.css" />
+    <Content Include="wwwroot\nap-auth\ReCheckIn.js" />
+    <Content Include="wwwroot\nap-auth\validationEngine.jquery.css" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Auth\OtpLoginFlow.cshtml" />
-    <Content Include="Views\Auth\Offline.cshtml" />
-    <Content Include="Views\Auth\NotFound.cshtml" />
-    <Content Include="Views\Auth\Index.cshtml" />
-    <Content Include="Views\Auth\Error.cshtml" />
-    <Content Include="Views\Auth\ChangePassword.cshtml" />
-    <Content Include="Views\Auth\AccessDenied.cshtml" />
+    <None Include="Views\Auth\OtpLoginFlow.cshtml" />
+    <EmbeddedResource Include="Views\Auth\Offline.cshtml" />
+    <EmbeddedResource Include="Views\Auth\NotFound.cshtml" />
+    <EmbeddedResource Include="Views\Auth\Index.cshtml" />
+    <EmbeddedResource Include="Views\Auth\Error.cshtml" />
+    <EmbeddedResource Include="Views\Auth\ChangePassword.cshtml" />
+    <EmbeddedResource Include="Views\Auth\AccessDenied.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
