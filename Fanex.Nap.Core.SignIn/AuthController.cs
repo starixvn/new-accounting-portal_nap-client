@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
@@ -25,6 +24,7 @@ namespace Fanex.NAP.Core.SignIn
     using Fanex.NAP.Core.Service.Interface;
     using Web;
 
+    [AllowAnonymous]
     public class AuthController : Controller
     {
         #region members
@@ -76,10 +76,10 @@ namespace Fanex.NAP.Core.SignIn
             }
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult Index()
         {
+            Session["OtpUserId"] = 0;
             GenerateNewToken();
 
             var indexViewModel = new IndexViewModel();
@@ -95,7 +95,6 @@ namespace Fanex.NAP.Core.SignIn
         }
 
         [ValidateAntiForgeryToken]
-        [AllowAnonymous]
         [HttpPost]
         public ActionResult Index(string username, string password, string loginToken)
         {
@@ -221,22 +220,26 @@ namespace Fanex.NAP.Core.SignIn
         {
             DoSignOut();
 
-            if (!string.IsNullOrEmpty(ConfigurationManager.AppSettings["NetCoreAuth"]))
+            if (string.IsNullOrEmpty(PropagationAuthUrl))
             {
-                var redirectUrl = Helper.GetAbsoluteRedirectUrl(Request, Url.Content(FormsAuthentication.LoginUrl));
-                var encodedRedirectUrl = HttpUtility.UrlEncode(redirectUrl);
-
-                return Redirect(ConfigurationManager.AppSettings["NetCoreAuth"] + $"/LogOut?redirectUrl={encodedRedirectUrl}");
+                return Redirect(FormsAuthentication.LoginUrl);
             }
 
-            return Redirect(FormsAuthentication.LoginUrl);
+            var homeUrl = Helper.HomeUrl;
+            var encodedRedirectUrl = HttpUtility.UrlEncode(homeUrl);
+            var parameters = $"?redirectUrl={encodedRedirectUrl}";
+
+            var propagationAuthUrl = PropagationAuthUrl.Replace("/SSO", "/LogOut") + parameters;
+
+
+
+            return Redirect(propagationAuthUrl);
         }
 
         #endregion sign out
 
         #region re check in
 
-        [AllowAnonymous]
         public ActionResult ReCheckIn()
         {
             if (!NapSettings.Settings.EnableReCheckIn)
@@ -391,7 +394,6 @@ namespace Fanex.NAP.Core.SignIn
 
         #region common
 
-        [AllowAnonymous]
         public ActionResult Offline()
         {
             var isDownTime = maintenanceService.IsUnderMaintenance();
@@ -407,19 +409,16 @@ namespace Fanex.NAP.Core.SignIn
             return View("Offline", viewModel);
         }
 
-        [AllowAnonymous]
         public ActionResult AccessDenied()
         {
             return View("AccessDenied");
         }
 
-        [AllowAnonymous]
         public ActionResult Error()
         {
             return View("Error");
         }
 
-        [AllowAnonymous]
         public ActionResult Static(string url)
         {
             var contentType = "application/octet-stream";
@@ -437,7 +436,6 @@ namespace Fanex.NAP.Core.SignIn
             return Content(text, contentType);
         }
 
-        [AllowAnonymous]
         public ActionResult RecheckinScript()
         {
             if (!NapSettings.Settings.EnableReCheckIn)
@@ -466,19 +464,7 @@ namespace Fanex.NAP.Core.SignIn
             }
         }
 
-        private string PropagationAuthUrl
-        {
-            get
-            {
-                var legacyPropagationAuth = ConfigurationManager.AppSettings["NetCoreAuth"] ?? string.Empty;
-                var propagationAuth = ConfigurationManager.AppSettings["PropagationAuth"] ?? string.Empty;
-
-                propagationAuth = string.IsNullOrEmpty(propagationAuth) ? legacyPropagationAuth : propagationAuth;
-                propagationAuth = propagationAuth.Trim().TrimEnd('/');
-
-                return propagationAuth;
-            }
-        }
+        private string PropagationAuthUrl => Helper.PropagationAuthUrl;
 
         #endregion
 
@@ -514,7 +500,6 @@ namespace Fanex.NAP.Core.SignIn
 
         #endregion
 
-        [AllowAnonymous]
         public ActionResult WhoAmI()
         {
             return Content("OK");
@@ -547,7 +532,7 @@ namespace Fanex.NAP.Core.SignIn
 
             if (!string.IsNullOrEmpty(PropagationAuthUrl))
             {
-                return RedirectToPrapagationAuth(user.Id, onUserId);
+                return RedirectToPropagationAuth(user.Id, onUserId);
             }
             else
             {
@@ -604,19 +589,18 @@ namespace Fanex.NAP.Core.SignIn
 
         #region SSO
 
-        [AllowAnonymous]
         [HttpGet]
         public ActionResult SSO(string userId, string onuserId, string time, string redirectUrl = "")
         {
             if (ssoService.IsAuthenticated(userId, onuserId, time, this))
             {
-                if (!string.IsNullOrEmpty(PropagationAuthUrl))
+                if (string.IsNullOrEmpty(PropagationAuthUrl))
                 {
-                    return RedirectToPrapagationAuth(userId, onuserId, time, redirectUrl);
+                    return RedirectToRedirectUrl(redirectUrl);
                 }
                 else
                 {
-                    return RedirectToRedirectUrl(redirectUrl);
+                    return RedirectToPrapagationAuth(userId, onuserId, time, redirectUrl);
                 }
             }
 
@@ -630,14 +614,15 @@ namespace Fanex.NAP.Core.SignIn
         }
 
 
-        private ActionResult RedirectToPrapagationAuth(int userId, int onUserId)
+        private ActionResult RedirectToPropagationAuth(int userId, int onUserId)
         {
             var time = securityService.GetTime();
-            var redirectBackUrl = HttpUtility.UrlEncode(FormsAuthentication.DefaultUrl);
+            var homeUrl = Helper.HomeUrl;
+            var encodedRedirectUrl = HttpUtility.UrlEncode(homeUrl);
             var parameters = $"?userId={Cryptography.CfsEnCrypt(userId.ToString())}"
                 + $"&onuserId={Cryptography.CfsEnCrypt(onUserId.ToString())}"
                 + $"&time={Cryptography.CfsEnCrypt(time.ToString())}"
-                + $"&redirectUrl={redirectBackUrl}";
+                + $"&redirectUrl={encodedRedirectUrl}";
 
             var redirectAuthUrl = PropagationAuthUrl + parameters;
 
@@ -647,8 +632,7 @@ namespace Fanex.NAP.Core.SignIn
 
         private ActionResult RedirectToPrapagationAuth(string userId, string onuserId, string time, string redirectUrl)
         {
-            redirectUrl = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.Trim();
-            var absoluteRedirectUrl = Helper.GetAbsoluteRedirectUrl(Request, Url.Content(redirectUrl));
+            var absoluteRedirectUrl = Helper.GetAbsoluteUrl(redirectUrl);
             var encodedRedirectUrl = HttpUtility.UrlEncode(absoluteRedirectUrl);
 
             var parameters = $"?userId={userId}&onuserId={onuserId}&time={time}&redirectUrl={encodedRedirectUrl}";

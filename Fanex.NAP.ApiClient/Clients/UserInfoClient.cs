@@ -21,7 +21,7 @@
             return Get<bool>(CreateRequestUri(RelativePaths.UpdatePassword, parameters));
         }
 
-        private class RelativePaths
+        private static class RelativePaths
         {
             public const string UpdatePassword = "userinfo/updatePassword";
         }

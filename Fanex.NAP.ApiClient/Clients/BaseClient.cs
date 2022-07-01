@@ -6,7 +6,6 @@
     using System.Net;
     using System.Net.Http;
     using System.Text;
-    using System.Threading.Tasks;
     using Exceptions;
     using Extensions;
     using Newtonsoft.Json;
@@ -26,38 +25,29 @@
 
         protected T Get<T>(Uri requestUri)
         {
-            T result = default(T);
-
             using (var message = new HttpRequestMessage(HttpMethod.Get, requestUri))
             {
                 using (var response = httpClient.SendAsync(message).Result)
                 {
-                    result = GetResponse<T>(response).Result;
+                    if (response.StatusCode == HttpStatusCode.Unauthorized)
+                    {
+                        throw new NAPApiException($"No permission");
+                    }
+                    else if (response.StatusCode == HttpStatusCode.InternalServerError)
+                    {
+                        throw new NAPApiException(response.Content.ReadAsStringAsync().Result);
+                    }
+                    else
+                    {
+                        var receivedContent = response.Content.ReadAsStringAsync().Result;
+
+                        return DeserializeObject<T>(requestUri, receivedContent);
+                    }
                 }
             }
-
-            return result;
         }
 
-        private static async Task<T> GetResponse<T>(HttpResponseMessage response)
-        {
-            if (response.StatusCode == HttpStatusCode.Unauthorized)
-            {
-                throw new NAPApiException($"No permission");
-            }
-            else if (response.StatusCode == HttpStatusCode.InternalServerError)
-            {
-                throw new NAPApiException(await response.Content.ReadAsStringAsync());
-            }
-            else
-            {
-                var receivedContent = await response.Content.ReadAsStringAsync();
-
-                return DeserializeObject<T>(receivedContent);
-            }
-        }
-
-        private static T DeserializeObject<T>(string content)
+        private static T DeserializeObject<T>(Uri requestUri, string content)
         {
             try
             {
@@ -65,7 +55,7 @@
             }
             catch (Exception e)
             {
-                throw new FormatException($"=======Received:===\r\n {content}\r\n========", e);
+                throw new ArgumentException($"===RequestUri:{requestUri}=======Received:===\r\n {content}\r\n========", e);
             }
         }
 
@@ -84,7 +74,7 @@
                     }
                     catch (Exception e)
                     {
-                        throw new Exception($"=======Received:===\r\n {receivedContent}\r\n========", e);
+                        throw new ArgumentException($"===RequestUri:{requestUri}=======Received:===\r\n {receivedContent}\r\n========", e);
                     }
                 }
             }

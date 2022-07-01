@@ -1,43 +1,80 @@
 ﻿using System;
 using System.Configuration;
 using System.Web;
-using System.Web.Security;
 
 namespace Fanex.NAP.Core.SignIn
 {
     public static class Helper
     {
-        private static char[] trimChars = new[] { '~', '/' };
+        public static readonly string RootUrl = GetRootUrl();
 
-        public static string GetAbsoluteRedirectUrl(HttpRequestBase request, string redirectUrl)
+        public static readonly string HomeUrl = GetHomeUrl();
+
+        public static readonly string PropagationAuthUrl = GetPropagationAuthUrl();
+
+
+        public static string GetAbsoluteUrl(string redirectUrl)
         {
-            if (string.IsNullOrEmpty(redirectUrl))
+            var url = GetLocalAbsoluteUrl(redirectUrl);
+
+            return string.IsNullOrEmpty(RootUrl)
+                ? url
+                : CombineUrl(RootUrl, url);
+        }
+
+        private static string GetLocalAbsoluteUrl(string redirectUrl)
+        {
+            var url = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.Trim();
+
+            if (IsAbsoluteUrl(url))
             {
-                redirectUrl = CombineUrl(GetAppUrl(request), FormsAuthentication.DefaultUrl);
+                return url;
             }
 
-            if (!IsAbsoluteUrl(redirectUrl))
+            return IsVirtualPath(url)
+               ? VirtualPathUtility.ToAbsolute(url)
+               : url;
+        }
+
+        private static string GetHomeUrl()
+        {
+            var homeUrl = VirtualPathUtility.ToAbsolute("~/");
+
+            return string.IsNullOrEmpty(RootUrl) ? homeUrl : CombineUrl(RootUrl, homeUrl);
+        }
+
+        private static string GetRootUrl()
+        {
+            var rootUrl = ConfigurationManager.AppSettings["RootUrl"] ?? string.Empty;
+
+            return rootUrl.TrimEnd('/');
+        }
+
+        private static string GetPropagationAuthUrl()
+        {
+            var propagationAuth = ConfigurationManager.AppSettings["PropagationAuth"] ?? string.Empty;
+
+            propagationAuth = propagationAuth.Trim().TrimEnd('/');
+
+            if (string.IsNullOrEmpty(propagationAuth) || IsAbsoluteUrl(propagationAuth))
             {
-                redirectUrl = CombineUrl(GetAppUrl(request), redirectUrl);
+                return propagationAuth;
             }
 
-            return redirectUrl;
+            return IsVirtualPath(propagationAuth)
+                ? VirtualPathUtility.ToAbsolute(propagationAuth)
+                : propagationAuth;
         }
 
         private static bool IsAbsoluteUrl(string url)
         {
-            Uri result;
-            return Uri.TryCreate(url, UriKind.Absolute, out result);
+            return url.StartsWith("/")
+                || Uri.TryCreate(url, UriKind.Absolute, out _);
         }
 
-        private static string GetAppUrl(HttpRequestBase request)
+        private static bool IsVirtualPath(string url)
         {
-            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings["RootUrl"]))
-            {
-                return request.Url.GetLeftPart(UriPartial.Authority) + VirtualPathUtility.ToAbsolute("~/");
-            }
-
-            return CombineUrl(ConfigurationManager.AppSettings["RootUrl"], request.ApplicationPath);
+            return url.StartsWith("~/");
         }
 
         private static string CombineUrl(string baseUrl, string relativeUrl)
