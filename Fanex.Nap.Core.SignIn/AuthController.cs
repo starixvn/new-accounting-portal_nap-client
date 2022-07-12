@@ -38,6 +38,10 @@ namespace Fanex.NAP.Core.SignIn
         private readonly IMaintenanceService maintenanceService;
         private readonly SSOService ssoService;
 
+        private readonly string propagationAuthUrl = Helper.GetPropagationAuthUrl();
+
+        private readonly string homeUrl = Helper.GetHomeUrl();
+
         #endregion members
 
         #region ctors
@@ -215,20 +219,17 @@ namespace Fanex.NAP.Core.SignIn
         {
             DoSignOut();
 
-            if (string.IsNullOrEmpty(PropagationAuthUrl))
+            if (string.IsNullOrEmpty(this.propagationAuthUrl))
             {
                 return Redirect(FormsAuthentication.LoginUrl);
             }
 
-            var homeUrl = Helper.HomeUrl;
             var encodedRedirectUrl = HttpUtility.UrlEncode(homeUrl);
             var parameters = $"?redirectUrl={encodedRedirectUrl}";
 
-            var propagationAuthUrl = PropagationAuthUrl.Replace("/SSO", "/LogOut") + parameters;
+            var ssoAuthUrl = this.propagationAuthUrl.Replace("/SSO", "/LogOut") + parameters;
 
-
-
-            return Redirect(propagationAuthUrl);
+            return Redirect(ssoAuthUrl);
         }
 
         #endregion sign out
@@ -380,8 +381,7 @@ namespace Fanex.NAP.Core.SignIn
 
         private void GenerateNewToken()
         {
-            // var loginToken = Guid.NewGuid().ToString("N");
-            var loginToken = "26405e7fa3ea4ee7a1912ac014de4c54";
+            var loginToken = Guid.NewGuid().ToString("N");
             FormToken = loginToken;
             AddTokenToCookie(loginToken);
         }
@@ -427,8 +427,6 @@ namespace Fanex.NAP.Core.SignIn
 
             return Content($"window.rootUrl='{rootUrl}';\r\n{text}", "text/javascript");
         }
-
-        private string PropagationAuthUrl => Helper.PropagationAuthUrl;
 
         #endregion
 
@@ -494,7 +492,7 @@ namespace Fanex.NAP.Core.SignIn
 
             SaveUserSession(user, user.Username, onUserId);
 
-            if (!string.IsNullOrEmpty(PropagationAuthUrl))
+            if (!string.IsNullOrEmpty(propagationAuthUrl))
             {
                 return RedirectToPropagationAuth(user.Id, onUserId);
             }
@@ -558,7 +556,7 @@ namespace Fanex.NAP.Core.SignIn
         {
             if (ssoService.IsAuthenticated(userId, onuserId, time, this))
             {
-                if (string.IsNullOrEmpty(PropagationAuthUrl))
+                if (string.IsNullOrEmpty(propagationAuthUrl))
                 {
                     return RedirectToRedirectUrl(redirectUrl);
                 }
@@ -581,14 +579,13 @@ namespace Fanex.NAP.Core.SignIn
         private ActionResult RedirectToPropagationAuth(int userId, int onUserId)
         {
             var time = securityService.GetTime();
-            var homeUrl = Helper.HomeUrl;
             var encodedRedirectUrl = HttpUtility.UrlEncode(homeUrl);
             var parameters = $"?userId={Cryptography.CfsEnCrypt(userId.ToString())}"
                 + $"&onuserId={Cryptography.CfsEnCrypt(onUserId.ToString())}"
                 + $"&time={Cryptography.CfsEnCrypt(time.ToString())}"
                 + $"&redirectUrl={encodedRedirectUrl}";
 
-            var redirectAuthUrl = PropagationAuthUrl + parameters;
+            var redirectAuthUrl = propagationAuthUrl + parameters;
 
             return Redirect(redirectAuthUrl);
         }
@@ -600,8 +597,8 @@ namespace Fanex.NAP.Core.SignIn
             var encodedRedirectUrl = HttpUtility.UrlEncode(absoluteRedirectUrl);
 
             var parameters = $"?userId={userId}&onuserId={onuserId}&time={time}&redirectUrl={encodedRedirectUrl}";
-            var propagationAuthUrl = PropagationAuthUrl + parameters;
-            return Redirect(propagationAuthUrl);
+            var ssoAuthUrl = this.propagationAuthUrl + parameters;
+            return Redirect(ssoAuthUrl);
         }
 
         #endregion

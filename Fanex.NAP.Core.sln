@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Fanex.NAP.Core.SignIn", "Fa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoSites", "DemoSites\DemoSites.csproj", "{049C09A7-8FDB-48BF-94D1-607A6E3C3954}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DemoSitesSub", "DemoSitesSub\DemoSitesSub.csproj", "{3B22A070-D19D-4BF8-A721-5D4480E6E1CA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{049C09A7-8FDB-48BF-94D1-607A6E3C3954}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{049C09A7-8FDB-48BF-94D1-607A6E3C3954}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{049C09A7-8FDB-48BF-94D1-607A6E3C3954}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B22A070-D19D-4BF8-A721-5D4480E6E1CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B22A070-D19D-4BF8-A721-5D4480E6E1CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B22A070-D19D-4BF8-A721-5D4480E6E1CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B22A070-D19D-4BF8-A721-5D4480E6E1CA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

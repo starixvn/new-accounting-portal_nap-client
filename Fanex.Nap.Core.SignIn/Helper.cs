@@ -6,12 +6,6 @@ namespace Fanex.NAP.Core.SignIn
 {
     public static class Helper
     {
-        public static readonly string RootUrl = GetRootUrl();
-
-        public static readonly string HomeUrl = GetHomeUrl();
-
-        public static readonly string PropagationAuthUrl = GetPropagationAuthUrl();
-
         public const string ReCheckInScript = @"function ReCheckin() {
     var urlRecheckIn = window.rootUrl + 'Auth/ReCheckIn';
     var urlLogout = window.rootUrl + 'Auth/LogOut';
@@ -46,32 +40,32 @@ setTimeout(ReCheckin, 60000);";
 
         public static string GetAbsoluteUrl(string redirectUrl)
         {
-            var url = GetLocalAbsoluteUrl(redirectUrl);
-
-            return string.IsNullOrEmpty(RootUrl)
-                ? url
-                : CombineUrl(RootUrl, url);
-        }
-
-        private static string GetLocalAbsoluteUrl(string redirectUrl)
-        {
-            var url = string.IsNullOrEmpty(redirectUrl) ? "~/" : redirectUrl.Trim();
-
-            if (IsAbsoluteUrl(url))
+            if (IsGlobalAbsoluteUrl(redirectUrl))
             {
-                return url;
+                return redirectUrl;
             }
 
-            return IsVirtualPath(url)
-               ? VirtualPathUtility.ToAbsolute(url)
-               : url;
+            var rootUrl = GetRootUrl();
+            var localAbsoluteUrl = GetLocalAbsoluteUrl(redirectUrl);
+
+            return string.IsNullOrEmpty(rootUrl)
+                ? VirtualPathUtility.Combine(VirtualPathUtility.ToAbsolute("~/"), localAbsoluteUrl)
+                : CombineUrl(rootUrl, localAbsoluteUrl);
         }
 
-        private static string GetHomeUrl()
+        public static string GetLocalAbsoluteUrl(string redirectUrl)
         {
-            var homeUrl = VirtualPathUtility.ToAbsolute("~/");
+            var url = string.IsNullOrEmpty(redirectUrl) ? VirtualPathUtility.ToAbsolute("~/") : redirectUrl.Trim();
 
-            return string.IsNullOrEmpty(RootUrl) ? homeUrl : CombineUrl(RootUrl, homeUrl);
+            return "/" + url.TrimStart('/');
+        }
+
+        public static string GetHomeUrl()
+        {
+            var rootUrl = GetRootUrl();
+            return string.IsNullOrEmpty(rootUrl)
+                ? VirtualPathUtility.ToAbsolute("~/")
+                : CombineUrl(rootUrl, VirtualPathUtility.ToAbsolute("~/"));
         }
 
         private static string GetRootUrl()
@@ -81,13 +75,13 @@ setTimeout(ReCheckin, 60000);";
             return rootUrl.TrimEnd('/');
         }
 
-        private static string GetPropagationAuthUrl()
+        public static string GetPropagationAuthUrl()
         {
             var propagationAuth = ConfigurationManager.AppSettings["PropagationAuth"] ?? string.Empty;
 
             propagationAuth = propagationAuth.Trim().TrimEnd('/');
 
-            if (string.IsNullOrEmpty(propagationAuth) || IsAbsoluteUrl(propagationAuth))
+            if (string.IsNullOrEmpty(propagationAuth) || IsLocalAbsoluteUrl(propagationAuth))
             {
                 return propagationAuth;
             }
@@ -97,15 +91,19 @@ setTimeout(ReCheckin, 60000);";
                 : propagationAuth;
         }
 
-        private static bool IsAbsoluteUrl(string url)
+        private static bool IsLocalAbsoluteUrl(string url)
         {
-            return url.StartsWith("/")
-                || Uri.TryCreate(url, UriKind.Absolute, out _);
+            return url.StartsWith("/");
+        }
+
+        private static bool IsGlobalAbsoluteUrl(string url)
+        {
+            return Uri.TryCreate(url, UriKind.Absolute, out _);
         }
 
         private static bool IsVirtualPath(string url)
         {
-            return url.StartsWith("~/");
+            return url.StartsWith("~");
         }
 
         private static string CombineUrl(string baseUrl, string relativeUrl)
