@@ -4,7 +4,7 @@
     using System.Runtime.Caching;
     using System.Web.Mvc;
     using System.Web.Security;
-    using Fanex.NAP.Core.Auth;
+    using Auth;
     using Fanex.NAP.Core.Business;
     using Fanex.NAP.Core.Configuration;
     using Fanex.NAP.Core.Service.Impl;

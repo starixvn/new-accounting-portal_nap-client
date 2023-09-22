@@ -7,8 +7,8 @@
     <ProjectGuid>{187880A6-1921-470F-BED8-572AB18ADA9E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fanex.NAP.Core.SignIn</RootNamespace>
-    <AssemblyName>Fanex.NAP.Core.SignIn</AssemblyName>
+    <RootNamespace>Fanex.Nap.SignIn</RootNamespace>
+    <AssemblyName>Fanex.Nap.SignIn</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

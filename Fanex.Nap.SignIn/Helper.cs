@@ -1,9 +1,9 @@
-﻿using System;
-using System.Configuration;
-using System.Web;
-
-namespace Fanex.NAP.Core.SignIn
+﻿namespace Fanex.Nap.SignIn
 {
+    using System;
+    using System.Configuration;
+    using System.Web;
+
     public static class Helper
     {
         public const string ReCheckInScript = @"function ReCheckin() {

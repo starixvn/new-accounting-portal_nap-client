@@ -1,27 +1,26 @@
-﻿using System;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Security;
-using Fanex.NAP.Core.Configuration;
-using Fanex.NAP.Core.Context;
-using Fanex.NAP.Core.Service.Impl;
-using Fanex.NAP.Core.SignIn.Models;
-using Fanex.NAP.Core.SignIn.ViewModel;
-using Fanex.NAP.Core.Web.Auth;
-using Fanex.NAP.Core.Web.Session;
-using ONEbook.UM;
-using ONEbook.UM.Services;
-
-namespace Fanex.NAP.Core.SignIn
+﻿namespace Fanex.Nap.SignIn
 {
-    using Core.Models;
-    using Core.Models.ParameterObject;
+    using System;
+    using System.Linq;
+    using System.Security.Cryptography;
+    using System.Text;
+    using System.Web;
+    using System.Web.Mvc;
+    using System.Web.Security;
     using Fanex.Common;
+    using Fanex.NAP.Core.Configuration;
+    using Fanex.NAP.Core.Models;
+    using Fanex.NAP.Core.Models.ParameterObject;
+    using Fanex.NAP.Core.Service.Impl;
     using Fanex.NAP.Core.Service.Interface;
-    using Web;
+    using Fanex.NAP.Core.Web;
+    using Fanex.NAP.Core.Web.Session;
+    using Models;
+    using NAP.Core.Web.Auth;
+    using NAP.Core.Web.Context;
+    using ONEbook.UM;
+    using ONEbook.UM.Services;
+    using ViewModel;
 
     [AllowAnonymous]
     public class AuthController : Controller

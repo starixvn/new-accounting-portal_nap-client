@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Core.SignIn.ViewModel
+﻿namespace Fanex.Nap.SignIn.ViewModel
 {
     public class MaintenanceViewModel
     {

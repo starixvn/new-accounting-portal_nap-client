@@ -1,7 +1,7 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Fanex.NAP.Core.SignIn.Models
+﻿namespace Fanex.Nap.SignIn.Models
 {
+    using System.ComponentModel.DataAnnotations;
+
     public class UpdatePasswordModel
     {
         [Display(Name = "Old Password")]

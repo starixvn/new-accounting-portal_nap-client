@@ -7,8 +7,8 @@
     {
         public static void Main(string[] args)
         {
-            var security = new SecurityService();
-            security.ReCheckIn(8, 99);
+            var userService = new UserService();
+            var users = userService.GetBySite(1, null);
 
             Console.ReadLine();
         }

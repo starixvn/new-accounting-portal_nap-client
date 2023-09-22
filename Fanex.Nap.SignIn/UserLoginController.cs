@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Core.SignIn
+﻿namespace Fanex.Nap.SignIn
 {
     using System.Web.Mvc;
 

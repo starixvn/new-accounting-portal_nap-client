@@ -1,16 +1,15 @@
-﻿namespace Fanex.NAP.Core.SignIn.Attribute
+﻿namespace Fanex.Nap.SignIn.Attribute
 {
     using System;
     using System.Web.Mvc;
     using System.Web.Security;
+    using Fanex.NAP.Core.Web;
     using Fanex.NAP.Core.Web.Session;
-    using Web;
-    using System.Net;
 
     /// <summary>
     /// Super authorize attribute.
     /// </summary>
-    [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class SessionAuthorizeAttribute : AuthorizeAttribute
     {
         /// <summary>

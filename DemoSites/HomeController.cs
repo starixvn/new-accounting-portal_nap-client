@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Mvc;
-using Fanex.NAP.Core.SignIn;
-
-namespace DemoSitesSub
+﻿namespace DemoSites
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using System.Web.Mvc;
+    using Fanex.Nap.SignIn;
+
     public class HomeController : Controller
     {
         public const string TestCaseText = @"/	/v2/home	/v2/home

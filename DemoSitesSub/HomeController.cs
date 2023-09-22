@@ -2,10 +2,11 @@
 using System.Linq;
 using System.Text;
 using System.Web.Mvc;
-using Fanex.NAP.Core.SignIn;
 
 namespace DemoSitesSub
 {
+    using Fanex.Nap.SignIn;
+
     public class HomeController : Controller
     {
         public const string TestCaseText = @"

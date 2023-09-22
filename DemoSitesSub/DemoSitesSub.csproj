@@ -249,9 +249,9 @@
       <Project>{bbbebe10-b8d5-4945-9a14-afa514acd492}</Project>
       <Name>Fanex.NAP.Core.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fanex.Nap.Core.SignIn\Fanex.NAP.Core.SignIn.csproj">
-      <Project>{187880a6-1921-470f-bed8-572ab18ada9e}</Project>
-      <Name>Fanex.NAP.Core.SignIn</Name>
+    <ProjectReference Include="..\Fanex.Nap.SignIn\Fanex.Nap.SignIn.csproj">
+      <Project>{187880A6-1921-470F-BED8-572AB18ADA9E}</Project>
+      <Name>Fanex.Nap.SignIn</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

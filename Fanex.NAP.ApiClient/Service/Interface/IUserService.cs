@@ -13,6 +13,8 @@ using Fanex.NAP.Core.Clients;
 
         User Get(string username);
 
+        IEnumerable<User> GetBySite(int siteId, bool? isActive);
+
         int GetUserLevel(int userId, int siteId);
 
         IEnumerable<MenuItem> GetMenuItem(int userId, int siteId, string environment = Constant.UAT, bool? isActive = null);

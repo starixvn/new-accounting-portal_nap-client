@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Core.SignIn.Attribute
+﻿namespace Fanex.Nap.SignIn.Attribute
 {
     using System;
     using System.Linq;
@@ -9,7 +9,7 @@
     using System.Web.Http.Controllers;
     using Fanex.NAP.Core.Web.Session;
 
-    [AttributeUsageAttribute(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true, AllowMultiple = true)]
     public class SessionAuthorizeApiAttribute : AuthorizeAttribute
     {
         public override void OnAuthorization(HttpActionContext actionContext)

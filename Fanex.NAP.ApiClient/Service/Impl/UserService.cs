@@ -1,6 +1,7 @@
 ﻿namespace Fanex.NAP.Core.Service.Impl
 {
     using System.Collections.Generic;
+    using System.Security.Permissions;
     using Business;
     using Clients;
     using Common.Helper;
@@ -46,6 +47,14 @@
             var userClient = ClientContext.Clients.CreateUserClient();
             {
                 return userClient.Get(username);
+            }
+        }
+
+        public IEnumerable<User> GetBySite(int siteId, bool? isActive)
+        {
+            var userClient = ClientContext.Clients.CreateUserClient();
+            {
+                return userClient.GetBySite(siteId, isActive);
             }
         }
 

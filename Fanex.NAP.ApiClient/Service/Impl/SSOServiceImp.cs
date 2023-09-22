@@ -7,11 +7,11 @@
     using System.Web.Security;
     using Common;
     using Configuration;
-    using Context;
     using Interface;
     using Models;
     using Models.ParameterObject;
     using Web.Auth;
+    using Web.Context;
     using Web.Session;
 
     public class SSOServiceImp : SSOService
