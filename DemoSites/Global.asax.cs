@@ -1,4 +1,4 @@
-﻿namespace Fanex.NAP.Home.Websites
+﻿namespace DemoSites
 {
     using System.Web.Routing;
     using Fanex.Caching;

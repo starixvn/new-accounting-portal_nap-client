@@ -160,6 +160,7 @@
     <EmbeddedResource Include="Web\ViewResources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>ViewResources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

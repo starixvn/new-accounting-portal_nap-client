@@ -1,6 +1,5 @@
-﻿namespace Fanex.NAP.Core.Auth
+﻿namespace Fanex.NAP.Core.Web.Auth
 {
-    using Fanex.NAP.Core.Web.Auth;
     using System;
     using System.Security.Principal;
     using System.Web;

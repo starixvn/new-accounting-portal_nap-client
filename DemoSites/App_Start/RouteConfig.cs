@@ -1,26 +1,10 @@
-﻿// --------------------------------------------------------------------------
-// <copyright file="RouteConfig.cs">
-// Copyright (c). All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------
-// <history>
-//   <change who="Jason.Ly" date="2014.7.22">Created</change>
-// </history>
-
-namespace Fanex.NAP.Home.Websites
+﻿namespace DemoSites
 {
     using System.Web.Mvc;
     using System.Web.Routing;
 
-    /// <summary>
-    /// Register custom route configurations.
-    /// </summary>
     public static class RouteConfig
     {
-        /// <summary>
-        /// Registers the routes.
-        /// </summary>
-        /// <param name="routes">The routes.</param>
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");

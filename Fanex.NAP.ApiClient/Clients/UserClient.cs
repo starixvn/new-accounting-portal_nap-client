@@ -36,6 +36,15 @@
             return Get<User>(CreateRequestUri(RelativePaths.GetByUsername, new { username }));
         }
 
+        public IEnumerable<User> GetBySite(int siteId, bool? isActive)
+        {
+            return Get<IEnumerable<User>>(CreateRequestUri(RelativePaths.GetBySite, new
+            {
+                siteId,
+                isActive
+            }));
+        }
+
         public IEnumerable<User> GetByFunctionAndSite(string functionKey, int siteId)
         {
             return Get<IEnumerable<User>>(CreateRequestUri(RelativePaths.GetByFunctionAndSite, new { functionKey, siteId }));
@@ -72,6 +81,7 @@
         {
             public const string GetById = "user/{0}";
             public const string GetByUsername = "user";
+            public const string GetBySite = "user/bysite";
             public const string GetByFunctionAndSite = "user/byfunctionandsite";
             public const string GetPermission = "user/{0}/permission";
             public const string GetPermissions = "user/{0}/permissions";

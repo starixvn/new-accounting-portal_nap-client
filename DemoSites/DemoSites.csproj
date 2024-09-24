@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Fanex.NAP.Home.Websites</RootNamespace>
-    <AssemblyName>Fanex.NAP.Home.Websites</AssemblyName>
+    <RootNamespace>DemoSites</RootNamespace>
+    <AssemblyName>DemoSites</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
@@ -249,9 +249,9 @@
       <Project>{bbbebe10-b8d5-4945-9a14-afa514acd492}</Project>
       <Name>Fanex.NAP.Core.Client</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Fanex.Nap.Core.SignIn\Fanex.NAP.Core.SignIn.csproj">
-      <Project>{187880a6-1921-470f-bed8-572ab18ada9e}</Project>
-      <Name>Fanex.NAP.Core.SignIn</Name>
+    <ProjectReference Include="..\Fanex.Nap.SignIn\Fanex.Nap.SignIn.csproj">
+      <Project>{187880A6-1921-470F-BED8-572AB18ADA9E}</Project>
+      <Name>Fanex.Nap.SignIn</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
@@ -268,12 +268,11 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>False</UseIIS>
+          <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>51185</DevelopmentServerPort>
+          <DevelopmentServerPort>51186</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>
-          </IISUrl>
+          <IISUrl>http://localhost:51186</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
